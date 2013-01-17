@@ -14,6 +14,8 @@ Navigate to some place where you want to put the library
 * git clone https://github.com/fuligginoso/docucomment
 * cd docucomment
 * python manage.py syncdb
+* chmod a+wr database
+* chmod a+wr database/docucomment.db
 
 to test it:
 * python manage.py runserver
