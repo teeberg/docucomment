@@ -1,0 +1,108 @@
+<html>
+	<head>
+		<title>{{ document.name }}</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				font-size: 70%;
+			}
+			#pdf-canvas {
+				width: 500px;
+				border: 1px solid black;
+			}
+			#mainbar {
+				float: left;
+				width: 550px;
+			}
+			#sidebar {
+				float: left;
+				width: 300px;
+			}
+			#comments {
+				height: 200px;
+				overflow: auto;
+			}
+		</style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+		<script type="text/javascript" src="https://raw.github.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
+		<script type="text/javascript">
+			function displayPage(pagenumber) {
+				pdf.getPage(pagenumber).then(function(page) {
+					var scale = 1.5;
+					var viewport = page.getViewport(scale);
+					var canvas = document.getElementById('pdf-canvas');
+					var context = canvas.getContext('2d');
+					canvas.height = viewport.height;
+					canvas.width = viewport.width;
+					page.render({canvasContext: context, viewport: viewport});
+					curpage = pagenumber;
+					$("#page").html("Page " + curpage);
+					loadComments(pagenumber);
+				});
+			}
+
+			function loadComments(page) {
+				$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
+					$("#comments").empty();
+					$.each(data, function(i, comment) {
+						$("<div class='comment'></div>").html(comment['nickname'] + ": " + comment['comment']).appendTo("#comments");
+					});
+				});
+			}
+
+			var url = '/document/{{ document.hash }}/file';
+			var curpage = 0;
+			var pdf;
+
+			$(function() {
+
+				$(".prev").click(function() {
+					displayPage(curpage - 1);
+					return false;
+				});
+				$(".next").click(function() {
+					displayPage(curpage + 1);
+					return false;
+				});
+				$("#post-comment").submit(function(event) {
+					$.ajax({
+						url: '/document/{{ document.hash }}/page/' + curpage + '/comment',
+						type: "post",
+						data: $(this).serialize()
+					}).done(function(data) {
+						loadComments(curpage);
+					});
+					event.preventDefault();
+				});
+
+				PDFJS.disableWorker = true;
+				PDFJS.getDocument(url).then(function(p) {
+					pdf = p;
+					displayPage(1);
+				});
+
+			});
+
+		</script>
+	</head>
+	<body>
+		<h1><a href="/">Home</a> >> {{ document.name }}</h1>
+		<div id="mainbar">
+			<h2 id="page">Page 1</h2>
+			<canvas id="pdf-canvas" style="width: 500px; height: 300px; border: 1px solid black;"></canvas>	
+
+			<div><a href="" class="prev">Prev</a> <a href="" class="next">Next</a></div>
+			<p>Remember to bookmark this page.</p>
+			<p>People uploading the exact same file will be redirected here.</p>
+		</div>
+
+		<div id="sidebar">
+			<h2>Comments</h2>
+			<div id="comments"></div>
+			<form id="post-comment" method="post">
+				{{ commentForm.as_p }}
+				<button type="submit">Comment</button>
+			</form>
+		</div>
+	</body>
+</html>
