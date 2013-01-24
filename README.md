@@ -18,4 +18,4 @@ Navigate to some place where you want to put the library
 * chmod a+wr database/docucomment.db
 
 to test it:
-* python manage.py runserver
+* python manage.py runserver 0.0.0.0:8000
