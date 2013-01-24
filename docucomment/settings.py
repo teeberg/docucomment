@@ -1,3 +1,5 @@
+import os
+
 # Django settings for docucomment project.
 
 DEBUG = True
@@ -9,10 +11,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/pi/docucomment/'+'database/docucomment.db',                      # Or path to database file if using sqlite3.
+        'NAME': path+'database/docucomment.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -45,7 +49,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/home/pi/docucomment/files'
+MEDIA_ROOT = path+'files'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -106,7 +110,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	"/home/pi/docucomment/templates"
+	path+"/templates"
 )
 
 INSTALLED_APPS = (
