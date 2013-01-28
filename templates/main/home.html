@@ -1,6 +1,9 @@
 <html>
 	<head>
 		<title>Docucomment</title>
+		<style type="text/css">
+			li.private { color: #aaa; }
+		</style>
 	</head>
 	<body>
 		<h1>Documents</h1>
@@ -30,7 +33,11 @@
 			<h2>Latest Comments</h2>
 			<ul>
 			{% for comment in comments %}
-				<li>{{ comment.creation_date }}, <b>{{ comment.nickname }}</b>: {{ comment.comment }} <small>({{ comment.document.name }}, page {{ comment.page }})</small></li>
+				{% if comment.document.public %}
+					<li>{{comment.creation_date}}: <b>{{ comment.nickname }}</b>: {{ comment.comment }} (in {{comment.document.name}} on <a href="document/{{comment.document.hash}}?page={{comment.page}}">page {{comment.page}}</a>)</li>
+				{% else %}
+					<li class="private">{{comment.creation_date}}: <b>{{comment.nickname}}</b> in {{comment.document.name}} on page {{comment.page}}</li>
+				{% endif %}
 			{% endfor %}
 			</ul>
 		{% endif %}
