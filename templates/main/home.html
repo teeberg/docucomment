@@ -26,14 +26,13 @@
 			<p>No public documents.</p>
 		{% endif %}
 
-        {% if comments %}
-            <h2>Latest Comments</h2>
-            <ul>
-            {% for comment in comments %}
-                <li>{{ comment.creation_date }}, <b>{{ comment.nickname }}</b>: {{ comment.comment }} <small>({{ comment.document.name }}, page {{ comment.page }})</small></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
+		{% if comments %}
+			<h2>Latest Comments</h2>
+			<ul>
+			{% for comment in comments %}
+				<li>{{ comment.creation_date }}, <b>{{ comment.nickname }}</b>: {{ comment.comment }} <small>({{ comment.document.name }}, page {{ comment.page }})</small></li>
+			{% endfor %}
+			</ul>
+		{% endif %}
 	</body>
 </html>
-	

@@ -57,16 +57,16 @@
 			$(function() {
 
 				$(".prev").click(function() {
-                    if(curpage > 1) {
-					    displayPage(curpage - 1);
-                    }
-                    return false;
+					if(curpage > 1) {
+						displayPage(curpage - 1);
+					}
+					return false;
 				});
 				$(".next").click(function() {
-                    if(curpage < pdf.numPages) {
-					    displayPage(curpage + 1);
-                    }
-                    return false;
+					if(curpage < pdf.numPages) {
+						displayPage(curpage + 1);
+					}
+					return false;
 				});
 				$("#post-comment").submit(function(event) {
 					$.ajax({
@@ -83,7 +83,7 @@
 				PDFJS.getDocument(url).then(function(p) {
 					pdf = p;
 					displayPage(1);
-                });
+				});
 			});
 
 		</script>
