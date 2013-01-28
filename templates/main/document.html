@@ -58,6 +58,7 @@
 			var url = '/document/{{ document.hash }}/file';
 			var curpage = 0;
 			var pdf;
+			var startpage;
 
 			$(function() {
 
@@ -93,15 +94,15 @@
 						displayPage(e.state);
 					}
 					else {
-						displayPage({{page}});
+						displayPage(startpage);
 					}
 				};
 
 				PDFJS.disableWorker = true;
 				PDFJS.getDocument(url).then(function(p) {
 					pdf = p;
-					var page = Math.max(1,Math.min(p.numPages,{{page}}));
-					displayPage(page);
+					startpage = Math.max(1,Math.min(p.numPages,{{page}}));
+					displayPage(startpage);
 				});
 			});
 
