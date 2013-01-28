@@ -51,6 +51,10 @@
 				});
 			}
 
+			function pushPage(page) {
+				window.history.pushState(page, "title", "/document/{{document.hash}}?page="+page);
+			}
+
 			var url = '/document/{{ document.hash }}/file';
 			var curpage = 0;
 			var pdf;
@@ -59,13 +63,17 @@
 
 				$(".prev").click(function() {
 					if(curpage > 1) {
-						displayPage(curpage - 1);
+						curpage--;
+						pushPage(curpage);
+						displayPage(curpage);
 					}
 					return false;
 				});
 				$(".next").click(function() {
 					if(curpage < pdf.numPages) {
-						displayPage(curpage + 1);
+						curpage++;
+						pushPage(curpage);
+						displayPage(curpage);
 					}
 					return false;
 				});
@@ -79,6 +87,12 @@
 					});
 					event.preventDefault();
 				});
+				
+				window.onpopstate = function(e){
+					if(e.state) {
+						displayPage(e.state);
+					}
+				};
 
 				PDFJS.disableWorker = true;
 				PDFJS.getDocument(url).then(function(p) {
