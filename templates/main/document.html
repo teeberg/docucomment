@@ -8,12 +8,12 @@
 				font-size: 70%;
 			}
 			#pdf-canvas {
-				width: 500px;
+				width: 600px;
 				border: 1px solid black;
 			}
 			#mainbar {
 				float: left;
-				width: 550px;
+				width: 650px;
 			}
 			#sidebar {
 				float: left;
@@ -37,7 +37,7 @@
 					canvas.width = viewport.width;
 					page.render({canvasContext: context, viewport: viewport});
 					curpage = pagenumber;
-					$("#page").html("Page " + curpage);
+					$("#page").html("Page " + curpage + " of " + pdf.numPages);
 					loadComments(pagenumber);
 				});
 			}
