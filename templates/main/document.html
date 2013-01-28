@@ -57,12 +57,16 @@
 			$(function() {
 
 				$(".prev").click(function() {
-					displayPage(curpage - 1);
-					return false;
+                    if(curpage > 1) {
+					    displayPage(curpage - 1);
+                    }
+                    return false;
 				});
 				$(".next").click(function() {
-					displayPage(curpage + 1);
-					return false;
+                    if(curpage < pdf.numPages) {
+					    displayPage(curpage + 1);
+                    }
+                    return false;
 				});
 				$("#post-comment").submit(function(event) {
 					$.ajax({
@@ -79,8 +83,7 @@
 				PDFJS.getDocument(url).then(function(p) {
 					pdf = p;
 					displayPage(1);
-				});
-
+                });
 			});
 
 		</script>
@@ -89,7 +92,7 @@
 		<h1><a href="/">Home</a> >> {{ document.name }}</h1>
 		<div id="mainbar">
 			<h2 id="page">Page 1</h2>
-			<canvas id="pdf-canvas" style="width: 500px; height: 300px; border: 1px solid black;"></canvas>	
+			<canvas id="pdf-canvas" style="width: 500px; height: 400px; border: 1px solid black;"></canvas>	
 
 			<div><a href="" class="prev">Prev</a> <a href="" class="next">Next</a></div>
 			<p>Remember to bookmark this page.</p>

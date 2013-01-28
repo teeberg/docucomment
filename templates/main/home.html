@@ -3,7 +3,7 @@
 		<title>Docucomment</title>
 	</head>
 	<body>
-		<h2>Documents</h2>
+		<h1>Documents</h1>
 		<p>After uploading a document you will be redirected to a secret page. Store its url as a bookmark.</p>
 		<p>Reuploading the exact same file will lead to the same page.</p>
 		<form method="post" enctype="multipart/form-data">
@@ -25,6 +25,15 @@
 		{% else %}
 			<p>No public documents.</p>
 		{% endif %}
+
+        {% if comments %}
+            <h2>Latest Comments</h2>
+            <ul>
+            {% for comment in comments %}
+                <li>{{ comment.creation_date }}, <b>{{ comment.nickname }}</b>: {{ comment.comment }} <small>({{ comment.document.name }}, page {{ comment.page }})</small></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
 	</body>
 </html>
 	

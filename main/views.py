@@ -27,7 +27,7 @@ def home(request):
 			return redirect("/document/" + hash)
 	else:
 		uploadForm = DocumentUploadForm()
-	return render_to_response('main/home.html', {"documents": Document.objects.all(), "uploadForm": uploadForm})
+	return render_to_response('main/home.html', {"documents": Document.objects.all(), "uploadForm": uploadForm, "comments": Comment.objects.order_by('-creation_date').all()})
 
 def send_file(request, hash):
 	ds = Document.objects.filter(hash=hash)
