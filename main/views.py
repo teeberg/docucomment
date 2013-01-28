@@ -44,7 +44,11 @@ def document(request, hash):
 	ds = Document.objects.filter(hash=hash)
 	if (len(ds) == 0):
 		raise Http404
-	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm()})
+	try:
+		page = int(request.GET['page']) if 'page' in request.GET else 1
+	except:
+		return redirect("/document/"+hash)
+	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(), 'page': page})
 
 def comments(request, hash, page):
 	ds = Document.objects.filter(hash=hash)
