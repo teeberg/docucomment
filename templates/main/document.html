@@ -42,6 +42,11 @@
 				});
 			}
 
+			function gotoPage(page) {
+				pushPage(page);
+				displayPage(page);
+			}
+
 			function loadComments(page) {
 				$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
 					$("#comments").empty();
@@ -65,17 +70,19 @@
 				$(".prev").click(function() {
 					if(curpage > 1) {
 						curpage--;
-						pushPage(curpage);
-						displayPage(curpage);
+						gotoPage(curpage);
 					}
 					return false;
 				});
 				$(".next").click(function() {
 					if(curpage < pdf.numPages) {
 						curpage++;
-						pushPage(curpage);
-						displayPage(curpage);
+						gotoPage(curpage);
 					}
+					return false;
+				});
+				$(".last").click(function() {
+					gotoPage(pdf.numPages);
 					return false;
 				});
 				$("#post-comment").submit(function(event) {
@@ -114,7 +121,7 @@
 			<h2 id="page">Page 1</h2>
 			<canvas id="pdf-canvas"></canvas>	
 
-			<div><a href="" class="prev">Prev</a> <a href="" class="next">Next</a></div>
+			<div style="font-size: 2em"><a href="javascript:gotoPage(1)" class="first">&lt;&lt;</a> <a href="" class="prev">&lt;</a> <a href="" class="next">&gt;</a> <a href ="" class="last">&gt;&gt;</a></div>
 			<p>Remember to bookmark this page.</p>
 			<p>People uploading the exact same file will be redirected here.</p>
 		</div>
