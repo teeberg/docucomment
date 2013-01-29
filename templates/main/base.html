@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		<style type="text/css" src="static/style.css"></style>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+		<script type="text/javascript" src="https://raw.github.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
+		{% block head %}{% endblock %}
+	</head>
+
+	<body>
+		{% block body %}{% endblock %}
+	</body>
+</html>

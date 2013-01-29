@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse
 from django.core.servers.basehttp import FileWrapper
 from django.utils import simplejson
 from django.shortcuts import render_to_response, redirect
+from django.contrib.auth.forms import AuthenticationForm
 from main.models import Document, Comment
 from datetime import datetime
 from hashlib import sha1
@@ -81,6 +82,9 @@ def comment(request, hash, page):
 			raise Http404
 	else:
 		raise Http404
+
+def login(request):
+	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(request)})
 	
 class CommentForm(forms.ModelForm):
 	class Meta:

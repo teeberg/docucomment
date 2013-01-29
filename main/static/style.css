@@ -1,0 +1,21 @@
+li.private { color: #aaa; }
+body {
+	font-family: sans-serif;
+	font-size: 70%;
+}
+#pdf-canvas {
+	width: 600px;
+	border: 1px solid black;
+}
+#mainbar {
+	float: left;
+	width: 650px;
+}
+#sidebar {
+	float: left;
+	width: 300px;
+}
+#comments {
+	height: 200px;
+	overflow: auto;
+}
