@@ -28,7 +28,14 @@
 		$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
 			$("#comments").empty();
 			$.each(data, function(i, comment) {
-				$("<div class='comment'></div>").html(comment['nickname'] + ": " + comment['comment']).appendTo("#comments");
+				var c = $("<div class='comment' id='comment-" + comment['id'] + "'></div>");
+				$(c).append("<div class='comment-nickname'>" + comment['nickname'] + "</div>");
+				$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
+				var a = $("<a href=\"\">edit</a>").click(function() {
+					$("#comment-" + comment['id']).html("<textarea></textarea>");
+				});
+				$(c).append(a);
+				c.appendTo("#comments");
 			});
 		});
 	}
@@ -60,6 +67,10 @@
 		});
 		$(".last").click(function() {
 			gotoPage(pdf.numPages);
+			return false;
+		});
+		$(".comment-edit a").click(function() {
+			alert("yes");
 			return false;
 		});
 		$("#post-comment").submit(function(event) {
