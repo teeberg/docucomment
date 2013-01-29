@@ -85,6 +85,10 @@ def comment(request, hash, page):
 
 def login(request):
 	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(request)})
+
+def deletecomment(request, id):
+	Comment.objects.filter(id=id).delete()
+	return redirect("/")
 	
 class CommentForm(forms.ModelForm):
 	class Meta:
