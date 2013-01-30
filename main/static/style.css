@@ -19,3 +19,6 @@ body {
 	height: 200px;
 	overflow: auto;
 }
+.comment {
+	white-space: pre;
+}

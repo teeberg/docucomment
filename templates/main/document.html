@@ -31,10 +31,15 @@
 				var c = $("<div class='comment' id='comment-" + comment['id'] + "'></div>");
 				$(c).append("<div class='comment-nickname'>" + comment['nickname'] + "</div>");
 				$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
+
 				var a = $("<a href=\"\">edit</a>").click(function() {
-					$("#comment-" + comment['id']).html("<textarea></textarea>");
+					$("#post-comment #id_nickname").attr("value", comment['nickname']);
+					$("#post-comment #id_comment").html(comment['comment']);
+					$("#post-comment #id_cancel").css("display", "inline");
+					return false;
 				});
 				$(c).append(a);
+
 				c.appendTo("#comments");
 			});
 		});
@@ -74,6 +79,7 @@
 			return false;
 		});
 		$("#post-comment").submit(function(event) {
+			console.log(event);
 			$.ajax({
 				url: '/document/{{ document.hash }}/page/' + curpage + '/comment',
 				type: "post",
@@ -83,6 +89,14 @@
 			});
 			event.preventDefault();
 		});
+		var c = $("<button id='id_cancel'>Cancel</button>");
+		$(c).click(function() {
+			$("#post-comment #id_nickname").value("");
+			$("#post-comment #id_comment").html("");
+			$("#post-comment #id_cancel").css("display", "none");
+		});
+		$(c).css("display", "none");
+		$("#post-comment").append(c);
 		
 		window.onpopstate = function(e){
 			if(e.state) {
