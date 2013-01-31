@@ -54,20 +54,40 @@
 	var pdf;
 	var startpage;
 
+	function nextPage() {
+		if(curpage < pdf.numPages) {
+			curpage++;
+			gotoPage(curpage);
+		}
+	}
+
+	function previousPage() {
+		if(curpage > 1) {
+			curpage--;
+			gotoPage(curpage);
+		}
+	}
+
 	$(function() {
 
-		$(".prev").click(function() {
-			if(curpage > 1) {
-				curpage--;
-				gotoPage(curpage);
+		$(document).keydown(function(e) {
+			if(e.keyCode == 37) {
+				// left arrow
+				previousPage();
+				return false;
 			}
+			else if(e.keyCode == 39) {
+				// right arrow
+				nextPage();
+				return false;
+			}
+		});
+		$(".prev").click(function() {
+			nextPage();
 			return false;
 		});
 		$(".next").click(function() {
-			if(curpage < pdf.numPages) {
-				curpage++;
-				gotoPage(curpage);
-			}
+			previousPage();
 			return false;
 		});
 		$(".last").click(function() {
