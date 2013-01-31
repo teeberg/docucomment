@@ -20,5 +20,5 @@ body {
 	overflow: auto;
 }
 .comment {
-	white-space: pre;
+	white-space: pre-wrap;
 }
