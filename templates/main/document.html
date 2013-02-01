@@ -71,15 +71,17 @@
 	$(function() {
 
 		$(document).keydown(function(e) {
-			if(e.keyCode == 37) {
-				// left arrow
-				previousPage();
-				return false;
-			}
-			else if(e.keyCode == 39) {
-				// right arrow
-				nextPage();
-				return false;
+			if(e.ctrlKey) {
+				if(e.keyCode == 37) {
+					// left arrow
+					previousPage();
+					return false;
+				}
+				else if(e.keyCode == 39) {
+					// right arrow
+					nextPage();
+					return false;
+				}
 			}
 		});
 		$(".prev").click(function() {
