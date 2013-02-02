@@ -27,7 +27,7 @@
 {% endif %}
 
 {% if comments %}
-	<h2>Latest Comments</h2>
+	<h2>Latest {{comments|length}} Comments</h2>
 	<ul>
 	{% for comment in comments %}
 		{% if comment.document.public %}
