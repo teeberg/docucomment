@@ -1,12 +1,14 @@
 li.private { color: #aaa; }
 body {
 	font-family: sans-serif;
-	font-size: 70%;
+	font-size: 80%;
+}
+h2#page {
+	text-align: center;
 }
 #pdf-canvas {
 	border: 1px solid black;
-	max-width: 95%;
-	max-height: 95%;
+	max-width: 99%;
 }
 #mainbar {
 	float: left;
@@ -22,7 +24,6 @@ body {
 	width: 300px;
 }
 #comments {
-	height: 200px;
 	overflow: auto;
 }
 .comment {

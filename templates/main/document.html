@@ -25,8 +25,8 @@
 	}
 
 	function loadComments(page) {
+		$("#comments").empty();
 		$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
-			$("#comments").empty();
 			$.each(data, function(i, comment) {
 				var c = $("<div class='comment' id='comment-" + comment['id'] + "'></div>");
 				$(c).append("<div class='comment-nickname'>" + comment['nickname'] + "</div>");
@@ -43,6 +43,10 @@
 				c.appendTo("#comments");
 			});
 		});
+	}
+
+	function reloadComments() {
+		loadComments(curpage);
 	}
 
 	function pushPage(page) {
@@ -153,7 +157,7 @@
 </div>
 
 <div id="sidebar">
-	<h2>Comments</h2>
+	<h2>Comments (<a href="javascript:reloadComments()">Reload</a>)</h2>
 	<div id="comments"></div>
 	<form id="post-comment" method="post">
 		{{ commentForm.as_p }}
