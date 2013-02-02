@@ -28,17 +28,20 @@
 		$("#comments").empty();
 		$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
 			$.each(data, function(i, comment) {
-				var c = $("<div class='comment' id='comment-" + comment['id'] + "'></div>");
-				$(c).append("<div class='comment-nickname'>" + comment['nickname'] + "</div>");
-				$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
-
-				var a = $("<a href=\"\">edit</a>").click(function() {
+				var c = $("<div class='comment'></div>");
+				var a = $("<a class=\"edit\" href=\"\">edit</a>").click(function() {
 					$("#post-comment #id_nickname").attr("value", comment['nickname']);
 					$("#post-comment #id_comment").html(comment['comment']);
 					$("#post-comment #id_cancel").css("display", "inline");
 					return false;
 				});
-				$(c).append(a);
+				var head = $("<div class='comment-head'></div>");
+
+				$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
+				/// editing is not functional yet
+				//$(head).append(a);
+				$(c).append(head);
+				$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
 
 				c.appendTo("#comments");
 			});
