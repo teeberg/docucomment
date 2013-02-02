@@ -92,11 +92,11 @@
 			}
 		});
 		$(".prev").click(function() {
-			nextPage();
+			previousPage();
 			return false;
 		});
 		$(".next").click(function() {
-			previousPage();
+			nextPage();
 			return false;
 		});
 		$(".last").click(function() {
@@ -162,6 +162,8 @@
 <div id="sidebar">
 	<h2>Comments (<a href="javascript:reloadComments()">Reload</a>)</h2>
 	<div id="comments"></div>
+
+	<h2>New Comment</h2>
 	<form id="post-comment" method="post">
 		{{ commentForm.as_p }}
 		<button type="submit">Comment</button>
