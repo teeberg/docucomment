@@ -78,7 +78,8 @@
 	$(function() {
 
 		$(document).keydown(function(e) {
-			if(e.ctrlKey) {
+			var target = e.target.tagName.toLowerCase();
+			if(target != 'input' && target != 'textarea') {
 				if(e.keyCode == 37) {
 					// left arrow
 					previousPage();
