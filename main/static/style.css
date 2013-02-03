@@ -25,6 +25,7 @@ h2#page {
 }
 #comments {
 	overflow: auto;
+	height: 200px;
 }
 .comment {
 	white-space: pre-wrap;
@@ -39,4 +40,11 @@ h2#page {
 }
 .comment-comment {
 	padding: 5px 0px;
+}
+div.navigation a {
+	text-decoration: none;
+	margin: 5px;
+}
+div.navigation a:hover {
+	background: #eee;
 }
