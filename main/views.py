@@ -28,7 +28,7 @@ def home(request):
 			return redirect("/document/" + hash)
 	else:
 		uploadForm = DocumentUploadForm()
-	return render_to_response('main/home.html', {"documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm, "comments": Comment.objects.order_by('-creation_date').all()})
+	return render_to_response('main/home.html', {"documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm, "comments": Comment.objects.order_by('-creation_date').filter(deleted=False)})
 
 def send_file(request, hash):
 	ds = Document.objects.filter(hash=hash)
@@ -57,7 +57,7 @@ def comments(request, hash, page):
 	if (len(ds) == 0):
 		raise Http404
 	d = ds[0]
-	comments = Comment.objects.filter(document=d, page=page)
+	comments = Comment.objects.filter(document=d, page=page, deleted=False)
 	cs = []
 	for comment in comments:
 		c = {"id": comment.id, "nickname": comment.nickname, "comment": comment.comment_parsed()}
@@ -100,7 +100,8 @@ def deletecomment(request, hash, id):
 	c = Comment.objects.get(pk=id)
 	if (c.document.id != d.id):
 		raise HttpResponse(simplejson.dumps({"status": "error", "message": "Comment doesn't belong to document"}))
-	c.delete()
+	c.deleted = True
+	c.save()
 	return HttpResponse(simplejson.dumps({"status": "ok"}));
 	
 class CommentForm(forms.ModelForm):

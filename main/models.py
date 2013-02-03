@@ -15,6 +15,7 @@ class Comment(models.Model):
 	document = models.ForeignKey(Document)
 	creation_date = models.DateTimeField('date created')
 	page = models.IntegerField()
+	deleted = models.BooleanField()
 	def comment_parsed(self):
 		res = self.comment
 		link_regex = re.compile(r"\[\[([^\]/]+)(\/(\d+))?\]\]")
