@@ -59,7 +59,7 @@ def comments(request, hash, page):
 	comments = Comment.objects.filter(document=d, page=page)
 	cs = []
 	for comment in comments:
-		c = {"nickname": comment.nickname, "comment": comment.comment}
+		c = {"nickname": comment.nickname, "comment": comment.comment_parsed()}
 		cs.append(c)
 	return HttpResponse(simplejson.dumps(cs))
 
