@@ -29,18 +29,26 @@
 			$("#comments").empty();
 			$.each(data, function(i, comment) {
 				var c = $("<div class='comment'></div>");
-				var a = $("<a class=\"edit\" href=\"\">edit</a>").click(function() {
+				var edit_link = $("<a class=\"edit\" href=\"#\">edit</a>").click(function() {
 					$("#post-comment #id_nickname").val(comment['nickname']);
 					$("#post-comment #id_comment").val(comment['comment']);
 					$("#post-comment #comment-cancel").css("display", "inline");
 					$("#post-comment #comment-id").val(comment['id']);
 					return false;
 				});
+				var delete_link = $("<a class=\"delete\" href=\"#\">delete</a>").click(function() {
+					$.ajax({
+						url: '/document/{{ document.hash }}/deletecomment/'+comment['id'],
+						type: 'get'
+					}).done(function(data) {
+						loadComments(curpage);
+					});
+				});
 				var head = $("<div class='comment-head'></div>");
-
+				var links = $("<div class='comment-links'></div>");
+				$(links).append(delete_link).append(edit_link);
 				$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
-				/// editing is not functional yet
-				$(head).append(a);
+				$(head).append(links);
 				$(c).append(head);
 				$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
 
@@ -48,10 +56,6 @@
 			});
 			MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
 		});
-	}
-
-	function reloadComments() {
-		loadComments(curpage);
 	}
 
 	function pushPage(page) {

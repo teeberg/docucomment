@@ -34,13 +34,17 @@ h2#page {
 }
 .comment-head {
 	background: #eef;
-	padding: 5px 0px;
+	padding: 5px;
 }
-.comment-head .edit {
+div.comment-links {
 	float: right;
+	display: inline;
+}
+div.comment-links a {
+	padding: 0 0 0 10px;
 }
 .comment-comment {
-	padding: 5px 0px;
+	padding: 5px;
 }
 div.navigation a {
 	text-decoration: none;
