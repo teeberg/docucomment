@@ -49,3 +49,6 @@ div.navigation a {
 div.navigation a:hover {
 	background: #eee;
 }
+button#comment-cancel {
+	display: none;
+}

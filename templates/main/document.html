@@ -30,16 +30,17 @@
 			$.each(data, function(i, comment) {
 				var c = $("<div class='comment'></div>");
 				var a = $("<a class=\"edit\" href=\"\">edit</a>").click(function() {
-					$("#post-comment #id_nickname").attr("value", comment['nickname']);
+					$("#post-comment #id_nickname").val(comment['nickname']);
 					$("#post-comment #id_comment").html(comment['comment']);
-					$("#post-comment #id_cancel").css("display", "inline");
+					$("#post-comment #comment-cancel").css("display", "inline");
+					$("#post-comment #comment-id").val(comment['id']);
 					return false;
 				});
 				var head = $("<div class='comment-head'></div>");
 
 				$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
 				/// editing is not functional yet
-				//$(head).append(a);
+				$(head).append(a);
 				$(c).append(head);
 				$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
 
@@ -125,14 +126,13 @@
 			});
 			event.preventDefault();
 		});
-		var c = $("<button id='id_cancel'>Cancel</button>");
-		$(c).click(function() {
-			$("#post-comment #id_nickname").value("");
+		$("#post-comment #comment-cancel").click(function() {
+			$("#post-comment #id_nickname").val("");
 			$("#post-comment #id_comment").html("");
-			$("#post-comment #id_cancel").css("display", "none");
+			$("#post-comment #comment-id").val("");
+			$(this).css("display", "none");
+			return false;
 		});
-		$(c).css("display", "none");
-		$("#post-comment").append(c);
 		
 		window.onpopstate = function(e){
 			if(e.state) {
@@ -173,7 +173,9 @@
 	<h2>New Comment</h2>
 	<form id="post-comment" method="post">
 		{{ commentForm.as_p }}
+		<input type="hidden" id="comment-id" name="id" value=""/>
 		<button type="submit">Comment</button>
+		<button type="button" id="comment-cancel">Cancel</button>
 	</form>
 </div>
 {% endblock %}
