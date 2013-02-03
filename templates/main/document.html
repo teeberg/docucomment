@@ -90,6 +90,11 @@
 					nextPage();
 					return false;
 				}
+				else if(e.keyCode == 82) {
+					// R
+					loadComments(curpage);
+					return false;
+				}
 			}
 		});
 		$(".prev").click(function() {
@@ -161,7 +166,7 @@
 </div>
 
 <div id="sidebar">
-	<h2>Comments (<a href="javascript:reloadComments()">Reload</a>)</h2>
+	<h2>Comments</h2>
 	<div id="comments"></div>
 
 	<h2>New Comment</h2>
