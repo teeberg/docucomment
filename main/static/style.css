@@ -26,6 +26,7 @@ h2#page {
 #comments {
 	overflow: auto;
 	height: 200px;
+	resize: both;
 }
 .comment {
 	white-space: pre-wrap;
