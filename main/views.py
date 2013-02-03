@@ -50,7 +50,7 @@ def document(request, hash):
 	except:
 		return redirect("/document/"+hash)
 	comment = Comment.objects.all()[0]
-	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(instance=comment), 'page': page})
+	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(), 'page': page})
 
 def comments(request, hash, page):
 	ds = Document.objects.filter(hash=hash)
@@ -65,15 +65,19 @@ def comments(request, hash, page):
 	return HttpResponse(simplejson.dumps(cs))
 
 def comment(request, hash, page):
+	print "a"
 	if request.method == 'POST':
 		ds = Document.objects.filter(hash=hash)
 		if (len(ds) == 0):
 			raise Http404
 		d = ds[0]
-		if request.POST.has_key('id'):
-			commentForm = CommentForm(Comment.objects.get(request.POST['id']))
+		print "b"
+		if request.POST.has_key('id') and len(request.POST['id']) > 0:
+			print "c"
+			commentForm = CommentForm(request.POST, instance=Comment.objects.get(pk=int(request.POST['id'])))
 			if (commentForm.is_valid()):
 				commentForm.save()
+				return HttpResponse(simplejson.dumps({"status": "ok"}));
 		else:
 			commentForm = CommentForm(request.POST)
 			if (commentForm.is_valid()):
