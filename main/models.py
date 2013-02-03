@@ -17,7 +17,7 @@ class Comment(models.Model):
 	page = models.IntegerField()
 	def comment_parsed(self):
 		res = self.comment
-		link_regex = re.compile(r"\[\[([^\]/]+)(\/(\d)+)?\]\]")
+		link_regex = re.compile(r"\[\[([^\]/]+)(\/(\d+))?\]\]")
 		def make_ahref(match):
 			pdf, pagepart, page = match.groups()
 			ds = Document.objects.filter(name=pdf)
