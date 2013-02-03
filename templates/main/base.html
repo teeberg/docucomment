@@ -5,6 +5,7 @@
 	<head>
 		<title>{% block title %}{% endblock %}</title>
 		<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" />
+		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shCore.css" %}" />
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
 		<script type="text/javascript" src="https://raw.github.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
 		<script type="text/x-mathjax-config">
@@ -17,6 +18,15 @@
 			});
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shCore.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCpp.js" %}"></script>
+		<script type="text/javascript">
+			SyntaxHighlighter.config.tagName = "code";
+			$(function() {
+				alert("yeah");
+				SyntaxHighlighter.all();
+			});
+		</script>
 		{% block head %}{% endblock %}
 	</head>
 
