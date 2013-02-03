@@ -19,10 +19,11 @@ class Comment(models.Model):
 	deleted = models.BooleanField()
 	def comment_parsed(self):
 		res = escape(self.comment)
-		link_regex = re.compile(r"\[\[([^\]/]+)(\/(\d+))?(?:\|([^\]]+))?\]\]")
+		link_regex = re.compile(r"\[\[([^\]/\|]+)(\/(\d+))?(?:\|([^\]]+))?\]\]")
 		def make_ahref(match):
+			d = match.groups()
+			print d
 			pdf, pagepart, page, title = match.groups()
-			print repr(title)
 			ds = Document.objects.filter(name=pdf)
 			if len(ds) >= 1:
 				d = ds[0]
