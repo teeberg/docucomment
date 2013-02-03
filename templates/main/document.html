@@ -31,7 +31,7 @@
 				var c = $("<div class='comment'></div>");
 				var a = $("<a class=\"edit\" href=\"\">edit</a>").click(function() {
 					$("#post-comment #id_nickname").val(comment['nickname']);
-					$("#post-comment #id_comment").html(comment['comment']);
+					$("#post-comment #id_comment").val(comment['comment']);
 					$("#post-comment #comment-cancel").css("display", "inline");
 					$("#post-comment #comment-id").val(comment['id']);
 					return false;
@@ -128,7 +128,7 @@
 		});
 		$("#post-comment #comment-cancel").click(function() {
 			$("#post-comment #id_nickname").val("");
-			$("#post-comment #id_comment").html("");
+			$("#post-comment #id_comment").val("");
 			$("#post-comment #comment-id").val("");
 			$(this).css("display", "none");
 			return false;

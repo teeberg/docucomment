@@ -82,11 +82,8 @@ def comment(request, hash, page):
 				c.document = d
 				c.page = page
 				c.save()
-			return HttpResponse(simplejson.dumps({"status": "ok"}));
-		else:
-			raise Http404
-	else:
-		raise Http404
+				return HttpResponse(simplejson.dumps({"status": "ok"}));
+	raise Http404
 
 def login(request):
 	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(request)})
