@@ -2,13 +2,13 @@ from django import forms
 from django.http import Http404, HttpResponse
 from django.core.servers.basehttp import FileWrapper
 from django.utils import simplejson
+from django.utils.html import escape, strip_tags
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from main.models import Document, Comment
 from datetime import datetime
 from hashlib import sha1
 from mimetypes import guess_type
-from xml.sax.saxutils import escape
 
 # Create your views here.
 
@@ -60,26 +60,25 @@ def comments(request, hash, page):
 	comments = Comment.objects.filter(document=d, page=page, deleted=False)
 	cs = []
 	for comment in comments:
-		c = {"id": comment.id, "nickname": comment.nickname, "comment": comment.comment_parsed()}
+		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment}
 		cs.append(c)
 	return HttpResponse(simplejson.dumps(cs))
 
 def comment(request, hash, page):
-	print "a"
 	if request.method == 'POST':
+		post = request.POST.copy()
+		post.update({'nickname': strip_tags(request.POST['nickname'])})
 		ds = Document.objects.filter(hash=hash)
 		if (len(ds) == 0):
 			raise Http404
 		d = ds[0]
-		print "b"
-		if request.POST.has_key('id') and len(request.POST['id']) > 0:
-			print "c"
-			commentForm = CommentForm(request.POST, instance=Comment.objects.get(pk=int(request.POST['id'])))
+		if post.has_key('id') and len(post['id']) > 0:
+			commentForm = CommentForm(post, instance=Comment.objects.get(pk=int(post['id'])))
 			if (commentForm.is_valid()):
 				commentForm.save()
 				return HttpResponse(simplejson.dumps({"status": "ok"}));
 		else:
-			commentForm = CommentForm(request.POST)
+			commentForm = CommentForm(post)
 			if (commentForm.is_valid()):
 				c = commentForm.save(commit=False)
 				c.creation_date = datetime.now()
