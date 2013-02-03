@@ -24,7 +24,6 @@ class Comment(models.Model):
 		link_regex = re.compile(r"\[\[([^\]/\|]+)(\/(\d+))?(?:\|([^\]]+))?\]\]")
 		def make_ahref(match):
 			d = match.groups()
-			print d
 			pdf, pagepart, page, title = match.groups()
 			ds = Document.objects.filter(name=pdf)
 			if len(ds) >= 1:
@@ -46,9 +45,7 @@ class Comment(models.Model):
 				args = {}
 				if match.group(2) != "":
 					for param in match.group(2)[1:].split(" "):
-						print param
 						args[param.split("=")[0]] = param.split("=")[1]
-					print args
 				return self.codeblock(args)
 			return match.group(0)
 		res = block_regex.sub(make_block, res)
