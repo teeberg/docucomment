@@ -49,7 +49,8 @@ def document(request, hash):
 		page = int(request.GET['page']) if 'page' in request.GET else 1
 	except:
 		return redirect("/document/"+hash)
-	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(), 'page': page})
+	comment = Comment.objects.all()[0]
+	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(instance=comment), 'page': page})
 
 def comments(request, hash, page):
 	ds = Document.objects.filter(hash=hash)
@@ -69,14 +70,18 @@ def comment(request, hash, page):
 		if (len(ds) == 0):
 			raise Http404
 		d = ds[0]
-		commentForm = CommentForm(request.POST)
-		if (commentForm.is_valid()):
-			c = commentForm.save(commit=False)
-			c.creation_date = datetime.now()
-			c.document = d
-			c.comment = escape(c.comment)
-			c.page = page
-			c.save()
+		if request.POST.has_key('id'):
+			commentForm = CommentForm(Comment.objects.get(request.POST['id']))
+			if (commentForm.is_valid()):
+				commentForm.save()
+		else:
+			commentForm = CommentForm(request.POST)
+			if (commentForm.is_valid()):
+				c = commentForm.save(commit=False)
+				c.creation_date = datetime.now()
+				c.document = d
+				c.page = page
+				c.save()
 			return HttpResponse(simplejson.dumps({"status": "ok"}));
 		else:
 			raise Http404
