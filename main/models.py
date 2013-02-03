@@ -44,8 +44,9 @@ class Comment(models.Model):
 			block_handlers = {'code': self.codeblock}
 			if match.group(1) in block_handlers:
 				args = {}
-				if match.group(2) != None:
+				if match.group(2) != "":
 					for param in match.group(2)[1:].split(" "):
+						print param
 						args[param.split("=")[0]] = param.split("=")[1]
 					print args
 				return self.codeblock(args)
@@ -65,5 +66,5 @@ class Comment(models.Model):
 		if ("lang" in args):
 			lang = args['lang']
 		else:
-			lang = 'sh'
+			lang = 'text'
 		return '<code class="brush: %s;">' % lang 

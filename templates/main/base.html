@@ -19,11 +19,41 @@
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shCore.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCpp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shAutoloader.js" %}"></script>
 		<script type="text/javascript">
 			SyntaxHighlighter.config.tagName = "code";
-			$(function() {
+			function highlight() {
+				SyntaxHighlighter.autoloader(
+				  ['applescript',            sp + 'shBrushAppleScript.js'],
+				  ['actionscript3', 'as3',      sp + 'shBrushAS3.js'],
+				  ['bash',          'shell',             sp + 'shBrushBash.js'],
+				  ['coldfusion',    'cf',          sp + 'shBrushColdFusion.js'],
+				  ['cpp',           'c',                  sp + 'shBrushCpp.js'],
+				  ['c#',            'c-sharp', 'csharp',      sp + 'shBrushCSharp.js'],
+				  ['css',                    sp + 'shBrushCss.js'],
+				  ['delphi', 'pascal' ,         sp + 'shBrushDelphi.js'],
+				  ['diff', 'patch', 'pas',         sp + 'shBrushDiff.js'],
+				  ['erl', 'erlang',             sp + 'shBrushErlang.js'],
+				  ['groovy',                 sp + 'shBrushGroovy.js'],
+				  ['java',                   sp + 'shBrushJava.js'],
+				  ['jfx', 'javafx',             sp + 'shBrushJavaFX.js'],
+				  ['js', 'jscript', 'javascript',  sp + 'shBrushJScript.js'],
+				  ['perl', 'pl',                sp + 'shBrushPerl.js'],
+				  ['php',                    sp + 'shBrushPhp.js'],
+				  ['text', 'plain',             sp + 'shBrushPlain.js'],
+				  ['py', 'python',              sp + 'shBrushPython.js'],
+				  ['ruby', 'rails', 'ror', 'rb',      sp + 'shBrushRuby.js'],
+				  ['sass', 'scss',              sp + 'shBrushSass.js'],
+				  ['scala',                  sp + 'shBrushScala.js'],
+				  ['sql',                    sp + 'shBrushSql.js'],
+				  ['vb', 'vbnet' ,              sp + 'shBrushVb.js'],
+				  ['xml', 'xhtml', 'xslt', 'html',    sp + 'shBrushXml.js']
+				]);
 				SyntaxHighlighter.all();
+			}
+			$(function() {
+				sp = "{% static "syntaxhighlighter_3.0.83/scripts/" %}";
+				highlight();
 			});
 		</script>
 		{% block head %}{% endblock %}
