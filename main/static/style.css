@@ -28,6 +28,15 @@ h2#page {
 	height: 200px;
 	resize: both;
 }
+#comments-bar {
+	float: right;
+	width: 50%;
+	max-width: 400px;
+	min-width: 200px;
+}
+#comments-bar span.nickname {
+	font-weight: bold;
+}
 .comment {
 	white-space: pre-wrap;
 	margin: 10px 0;
@@ -35,6 +44,12 @@ h2#page {
 .comment-head {
 	background: #eef;
 	padding: 5px;
+}
+#comments-bar h1 {
+	text-align: right;
+}
+#comments-bar .comment {
+	white-space: normal;
 }
 div.comment-links {
 	float: right;

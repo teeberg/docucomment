@@ -2,7 +2,42 @@
 
 {% block title %}Docucomment{% endblock %}
 
+{% block head %}
+<script type="text/javascript">
+$(function() {
+	$(".comment").click(function() {
+		window.location.href = $(this).data("url");
+		return false;
+	});
+});
+</script>
+{% endblock %}
+
 {% block body %}
+
+{% if comments %}
+<div id="comments-bar">
+	<h1>{{comments|length}} Comments</h1>
+
+{% for comment in comments %}
+	{% if comment.document.public %}
+		<div class="comment" data-url="document/{{comment.document.hash}}?page={{comment.page}}">
+	{% else %}
+		<div class="comment">
+	{% endif %}
+
+		<div class="comment-head">
+			<div class="comment-links">{{comment.document.name}}, page {{comment.page}}</div>
+			<span class="nickname">{{comment.nickname}}</span><br/>{{comment.creation_date}}
+		</div>
+	{% if comment.document.public %}
+		<div class="comment-comment">{{comment.comment|safe|linebreaks}}</div>
+	{% endif %}
+	</div>
+{% endfor %}
+</div>
+{% endif %}
+
 <h1>Documents</h1>
 <p>After uploading a document you will be redirected to a secret page. Store its url as a bookmark.</p>
 <p>Reuploading the exact same file will lead to the same page.</p>
@@ -26,16 +61,4 @@
 	<p>No public documents.</p>
 {% endif %}
 
-{% if comments %}
-	<h2>Latest {{comments|length}} Comments</h2>
-	<ul class="comment_list">
-	{% for comment in comments %}
-		{% if comment.document.public %}
-			<li><a href="document/{{comment.document.hash}}?page={{comment.page}}">{{comment.creation_date}}: <b>{{ comment.nickname }}</b>: {{ comment.comment }} (in {{comment.document.name}} on page {{comment.page}})</a></li>
-		{% else %}
-			<li class="private">{{comment.creation_date}}: <b>{{comment.nickname}}</b> in {{comment.document.name}} on page {{comment.page}}</li>
-		{% endif %}
-	{% endfor %}
-	</ul>
-{% endif %}
 {% endblock %}

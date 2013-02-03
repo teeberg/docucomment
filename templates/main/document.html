@@ -115,10 +115,6 @@
 			gotoPage(pdf.numPages);
 			return false;
 		});
-		$(".comment-edit a").click(function() {
-			alert("yes");
-			return false;
-		});
 		$("#post-comment").submit(function(event) {
 			$.ajax({
 				url: '/document/{{ document.hash }}/page/' + curpage + '/comment',
