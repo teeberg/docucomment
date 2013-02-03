@@ -49,7 +49,6 @@ def document(request, hash):
 		page = int(request.GET['page']) if 'page' in request.GET else 1
 	except:
 		return redirect("/document/"+hash)
-	comment = Comment.objects.all()[0]
 	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(), 'page': page})
 
 def comments(request, hash, page):
