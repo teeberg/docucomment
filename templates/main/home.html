@@ -28,10 +28,10 @@
 
 {% if comments %}
 	<h2>Latest {{comments|length}} Comments</h2>
-	<ul>
+	<ul class="comment_list">
 	{% for comment in comments %}
 		{% if comment.document.public %}
-			<li>{{comment.creation_date}}: <b>{{ comment.nickname }}</b>: {{ comment.comment }} (in {{comment.document.name}} on <a href="document/{{comment.document.hash}}?page={{comment.page}}">page {{comment.page}}</a>)</li>
+			<li><a href="document/{{comment.document.hash}}?page={{comment.page}}">{{comment.creation_date}}: <b>{{ comment.nickname }}</b>: {{ comment.comment }} (in {{comment.document.name}} on page {{comment.page}})</a></li>
 		{% else %}
 			<li class="private">{{comment.creation_date}}: <b>{{comment.nickname}}</b> in {{comment.document.name}} on page {{comment.page}}</li>
 		{% endif %}
