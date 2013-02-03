@@ -92,9 +92,16 @@ def comment(request, hash, page):
 def login(request):
 	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(request)})
 
-def deletecomment(request, id):
-	Comment.objects.filter(id=id).delete()
-	return redirect("/")
+def deletecomment(request, hash, id):
+	ds = Document.objects.filter(hash=hash)
+	if (len(ds) == 0):
+		raise Http404
+	d = ds[0]
+	c = Comment.objects.get(pk=id)
+	if (c.document.id != d.id):
+		raise HttpResponse(simplejson.dumps({"status": "error", "message": "Comment doesn't belong to document"}))
+	c.delete()
+	return HttpResponse(simplejson.dumps({"status": "ok"}));
 	
 class CommentForm(forms.ModelForm):
 	class Meta:
