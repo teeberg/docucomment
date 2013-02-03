@@ -6,6 +6,7 @@
 		<title>{% block title %}{% endblock %}</title>
 		<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" />
 		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shCore.css" %}" />
+		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shThemeDefault.css" %}" />
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
 		<script type="text/javascript" src="https://raw.github.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
 		<script type="text/x-mathjax-config">
@@ -19,41 +20,35 @@
 		</script>
 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shCore.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shAutoloader.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushAppleScript.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushAS3.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushBash.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushColdFusion.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCpp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCSharp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCss.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushDelphi.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushDiff.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushErlang.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushGroovy.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJava.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJavaFX.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJScript.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPerl.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPhp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPlain.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPython.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushRuby.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushSass.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushScala.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushSql.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushVb.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushVb.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushXml.js" %}"></script>
 		<script type="text/javascript">
-			SyntaxHighlighter.config.tagName = "code";
-			function highlight() {
-				SyntaxHighlighter.autoloader(
-				  ['applescript',            sp + 'shBrushAppleScript.js'],
-				  ['actionscript3', 'as3',      sp + 'shBrushAS3.js'],
-				  ['bash',          'shell',             sp + 'shBrushBash.js'],
-				  ['coldfusion',    'cf',          sp + 'shBrushColdFusion.js'],
-				  ['cpp',           'c',                  sp + 'shBrushCpp.js'],
-				  ['c#',            'c-sharp', 'csharp',      sp + 'shBrushCSharp.js'],
-				  ['css',                    sp + 'shBrushCss.js'],
-				  ['delphi', 'pascal' ,         sp + 'shBrushDelphi.js'],
-				  ['diff', 'patch', 'pas',         sp + 'shBrushDiff.js'],
-				  ['erl', 'erlang',             sp + 'shBrushErlang.js'],
-				  ['groovy',                 sp + 'shBrushGroovy.js'],
-				  ['java',                   sp + 'shBrushJava.js'],
-				  ['jfx', 'javafx',             sp + 'shBrushJavaFX.js'],
-				  ['js', 'jscript', 'javascript',  sp + 'shBrushJScript.js'],
-				  ['perl', 'pl',                sp + 'shBrushPerl.js'],
-				  ['php',                    sp + 'shBrushPhp.js'],
-				  ['text', 'plain',             sp + 'shBrushPlain.js'],
-				  ['py', 'python',              sp + 'shBrushPython.js'],
-				  ['ruby', 'rails', 'ror', 'rb',      sp + 'shBrushRuby.js'],
-				  ['sass', 'scss',              sp + 'shBrushSass.js'],
-				  ['scala',                  sp + 'shBrushScala.js'],
-				  ['sql',                    sp + 'shBrushSql.js'],
-				  ['vb', 'vbnet' ,              sp + 'shBrushVb.js'],
-				  ['xml', 'xhtml', 'xslt', 'html',    sp + 'shBrushXml.js']
-				]);
-				SyntaxHighlighter.all();
-			}
 			$(function() {
-				sp = "{% static "syntaxhighlighter_3.0.83/scripts/" %}";
-				highlight();
+				SyntaxHighlighter.config.tagName = "code";
+				SyntaxHighlighter.all();
 			});
 		</script>
 		{% block head %}{% endblock %}
