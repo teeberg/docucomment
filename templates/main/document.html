@@ -30,8 +30,8 @@
 			$.each(data, function(i, comment) {
 				var c = $("<div class='comment'></div>");
 				var edit_link = $("<a class=\"edit\" href=\"#\">edit</a>").click(function() {
-					$("#post-comment #id_nickname").val(comment['nickname']);
-					$("#post-comment #id_comment").val(comment['comment']);
+					$("#post-comment #id_nickname").val(comment['nickname_plain']);
+					$("#post-comment #id_comment").val(comment['comment_plain']);
 					$("#post-comment #comment-cancel").css("display", "inline");
 					$("#post-comment #comment-id").val(comment['id']);
 					return false;
@@ -120,7 +120,6 @@
 			return false;
 		});
 		$("#post-comment").submit(function(event) {
-			console.log(event);
 			$.ajax({
 				url: '/document/{{ document.hash }}/page/' + curpage + '/comment',
 				type: "post",

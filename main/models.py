@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import escape
 import re
 
 # Create your models here.
@@ -17,7 +18,7 @@ class Comment(models.Model):
 	page = models.IntegerField()
 	deleted = models.BooleanField()
 	def comment_parsed(self):
-		res = self.comment
+		res = escape(self.comment)
 		link_regex = re.compile(r"\[\[([^\]/]+)(\/(\d+))?\]\]")
 		def make_ahref(match):
 			pdf, pagepart, page = match.groups()
