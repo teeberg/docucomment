@@ -14,51 +14,55 @@ $(function() {
 {% endblock %}
 
 {% block body %}
+	<div id="header"><h1 id="header-title">Docucomment</h1></div>
 
-{% if comments %}
-<div id="comments-bar">
-	<h1>{{comments|length}} Comments</h1>
-
-{% for comment in comments %}
-	{% if comment.document.public %}
-		<div class="comment" data-url="document/{{comment.document.hash}}?page={{comment.page}}">
-	{% else %}
-		<div class="comment">
-	{% endif %}
-
-		<div class="comment-head">
-			<div class="comment-links">{{comment.document.name}}, page {{comment.page}}</div>
-			<span class="nickname">{{comment.nickname}}</span><br/>{{comment.creation_date}}
-		</div>
-	{% if comment.document.public %}
-		<div class="comment-comment">{{comment.comment|safe}}</div>
-	{% endif %}
-	</div>
-{% endfor %}
-</div>
-{% endif %}
-
-<h1>Documents</h1>
-<p>After uploading a document you will be redirected to a secret page. Store its url as a bookmark.</p>
-<p>Reuploading the exact same file will lead to the same page.</p>
-<form method="post" enctype="multipart/form-data">
-	<h2>Upload a document</h2>
-	{{ uploadForm.as_p }}
-	<button type="submit">Upload</button>
-</form>
-{% if documents %}
-	<ul>
-	{% for document in documents %}
-		<li>
-		{% if document.public %}
-			<a href="document/{{ document.hash }}">{{ document.name }}</a></li>
+	<div id="documents-bar">
+		<h1>Documents</h1>
+		<form method="post" enctype="multipart/form-data">
+			<h2>Upload a document</h2>
+			{{ uploadForm.as_p }}
+			<button type="submit">Upload</button>
+		</form>
+		{% if documents %}
+			<ul>
+			{% for document in documents %}
+				<li>
+				{% if document.public %}
+					<a href="document/{{ document.hash }}">{{ document.name }}</a></li>
+				{% else %}
+					{{ document.name }}
+				{% endif %}
+			{% endfor %}
+			</ul>
 		{% else %}
-			{{ document.name }}
+			<p>No public documents.</p>
 		{% endif %}
-	{% endfor %}
-	</ul>
-{% else %}
-	<p>No public documents.</p>
-{% endif %}
+	</div>
+
+	<div id="comments-bar">
+		{% if comments %}
+			<h1>{{comments|length}} Comments</h1>
+			<div id="comments">
+				{% for comment in comments %}
+					{% if comment.document.public %}
+						<div class="comment" data-url="document/{{comment.document.hash}}?page={{comment.page}}">
+					{% else %}
+						<div class="comment">
+					{% endif %}
+
+						<div class="comment-head">
+							<div class="comment-links">{{comment.document.name}}, page {{comment.page}}</div>
+							<span class="nickname">{{comment.nickname}}</span><br/>{{comment.creation_date}}
+						</div>
+					{% if comment.document.public %}
+						<div class="comment-comment">{{comment.comment|safe}}</div>
+					{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<p>No comments.</p>
+		{% endif %}
+	</div>
 
 {% endblock %}

@@ -8,13 +8,13 @@
 		pdf.getPage(pagenumber).then(function(page) {
 			var scale = 1.5;
 			var viewport = page.getViewport(scale);
-			var canvas = document.getElementById('pdf-canvas');
+			var canvas = document.getElementById('slide-canvas');
 			var context = canvas.getContext('2d');
 			canvas.height = viewport.height;
 			canvas.width = viewport.width;
 			page.render({canvasContext: context, viewport: viewport});
 			curpage = pagenumber;
-			$("#page").html("Page " + curpage + " of " + pdf.numPages);
+			$("#slide-page").html("Page " + curpage + " of " + pdf.numPages);
 			loadComments(pagenumber);
 		});
 	}
@@ -154,27 +154,29 @@
 
 {% block body %}
 <h1><a href="/">Home</a> &raquo; {{ document.name }}</h1>
-<div id="mainbar">
-	<h2 id="page">Page 1</h2>
-	<div id="pdf_container">
-		<canvas id="pdf-canvas"></canvas>
+
+	<div id="slide-bar">
+		<h2 id="slide-page">Page 1</h2>
+		<div id="slide-slide">
+			<canvas id="slide-canvas"></canvas>
+		</div>
+
+		<div style="font-size: 2em" class="navigation"><a href="javascript:gotoPage(1)" class="first">&laquo;</a> <a href="" class="prev">&lsaquo;</a> <a href="" class="next">&rsaquo;</a> <a href ="" class="last">&raquo;</a></div>
+		<p>Remember to bookmark this page.</p>
+		<p>People uploading the exact same file will be redirected here.</p>
 	</div>
 
-	<div style="font-size: 2em" class="navigation"><a href="javascript:gotoPage(1)" class="first">&laquo;</a> <a href="" class="prev">&lsaquo;</a> <a href="" class="next">&rsaquo;</a> <a href ="" class="last">&raquo;</a></div>
-	<p>Remember to bookmark this page.</p>
-	<p>People uploading the exact same file will be redirected here.</p>
-</div>
+	<div id="comments-bar">
+		<h2>Comments</h2>
+		<div id="comments"></div>
 
-<div id="sidebar">
-	<h2>Comments</h2>
-	<div id="comments"></div>
+		<h2>New Comment</h2>
+		<form id="post-comment" method="post">
+			{{ commentForm.as_p }}
+			<input type="hidden" id="comment-id" name="id" value=""/>
+			<button type="submit">Comment</button>
+			<button type="button" id="comment-cancel">Cancel</button>
+		</form>
+	</div>
+	{% endblock %}
 
-	<h2>New Comment</h2>
-	<form id="post-comment" method="post">
-		{{ commentForm.as_p }}
-		<input type="hidden" id="comment-id" name="id" value=""/>
-		<button type="submit">Comment</button>
-		<button type="button" id="comment-cancel">Cancel</button>
-	</form>
-</div>
-{% endblock %}
