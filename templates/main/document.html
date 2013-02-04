@@ -156,12 +156,17 @@
 <h1><a href="/">Home</a> &raquo; {{ document.name }}</h1>
 
 	<div id="slide-bar">
-		<h2 id="slide-page">Page 1</h2>
 		<div id="slide-slide">
 			<canvas id="slide-canvas"></canvas>
 		</div>
 
-		<div style="font-size: 2em" class="navigation"><a href="javascript:gotoPage(1)" class="first">&laquo;</a> <a href="" class="prev">&lsaquo;</a> <a href="" class="next">&rsaquo;</a> <a href ="" class="last">&raquo;</a></div>
+		<div class="navigation">
+			<a href="javascript:gotoPage(1)" class="first">&laquo;</a>
+			<a href="" class="prev">&lsaquo;</a>
+			<span id="slide-page">Page 1</span>
+			<a href="" class="next">&rsaquo;</a>
+			<a href ="" class="last">&raquo;</a>
+		</div>
 		<p>Remember to bookmark this page.</p>
 		<p>People uploading the exact same file will be redirected here.</p>
 	</div>

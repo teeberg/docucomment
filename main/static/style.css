@@ -81,6 +81,10 @@ div.comment-links a {
 	white-space: pre-wrap;
 	padding: 5px;
 }
+div.navigation {
+	text-align: center;
+	font-size: 1.5em;
+}
 div.navigation a {
 	text-decoration: none;
 	margin: 5px;
