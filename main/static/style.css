@@ -47,11 +47,11 @@ body {
 	margin-left: 40px;
 	float: left;
 	width: 400px;
-	overflow-y: auto;
 }
 #comments {
 	height: 300px;
-	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 body.home #comments {
 	height: 550px;
