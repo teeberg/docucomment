@@ -49,7 +49,7 @@ class Comment(models.Model):
 				return self.codeblock(args)
 			return match.group(0)
 		res = block_regex.sub(make_block, res)
-
+		
 		block_end_regex = re.compile(r"\[\/(\w+)\]")
 		def make_block_end(match):
 			blocks = {"code"}
