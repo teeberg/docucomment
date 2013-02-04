@@ -1,7 +1,20 @@
-li.private { color: #aaa; }
 body {
 	font-family: sans-serif;
 	font-size: 80%;
+	margin: 0px;
+	padding: 0px;
+}
+
+#header {
+	width: 100%;
+	background-color: #61649D;
+	color: white;
+}
+
+#header-title {
+	font-size: 100%;
+	padding: 5px;
+	margin: 0px auto;
 }
 
 #slide-page {
@@ -23,12 +36,16 @@ body {
 
 #documents-bar {
 	float: left;
-	width: 400px;
+	width: 500px;
+	margin-left: 20px;
+}
+#documents {
 	height: 400px;
 	overflow: auto;
 }
 
 #comments-bar {
+	margin-left: 40px;
 	float: left;
 	width: 400px;
 	overflow: auto;
@@ -38,7 +55,7 @@ body {
 	overflow: auto;
 }
 body.home #comments {
-	height: 350px;
+	height: 550px;
 }
 #comments-bar span.nickname {
 	font-weight: bold;
@@ -90,3 +107,9 @@ textarea {
 .clear {
 	clear: both;
 }
+
+#form-post-document {
+	background: #eef;
+	padding: 5px;
+}
+li.private { color: #aaa; }

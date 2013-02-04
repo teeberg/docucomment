@@ -14,26 +14,27 @@ $(function() {
 {% endblock %}
 
 {% block body %}
-	<div id="header"><h1 id="header-title">Docucomment</h1></div>
 
 	<div id="documents-bar">
-		<h1>Documents</h1>
-		<form method="post" enctype="multipart/form-data">
-			<h2>Upload a document</h2>
+		<h2>Documents</h2>
+		<form id="form-post-document" method="post" enctype="multipart/form-data">
+			<h3>Upload a document</h3>
 			{{ uploadForm.as_p }}
 			<button type="submit">Upload</button>
 		</form>
 		{% if documents %}
-			<ul>
-			{% for document in documents %}
-				<li>
-				{% if document.public %}
-					<a href="document/{{ document.hash }}">{{ document.name }}</a></li>
-				{% else %}
-					{{ document.name }}
-				{% endif %}
-			{% endfor %}
-			</ul>
+			<div id="documents">
+				<ul>
+				{% for document in documents %}
+					<li>
+					{% if document.public %}
+						<a href="document/{{ document.hash }}">{{ document.name }}</a></li>
+					{% else %}
+						{{ document.name }}
+					{% endif %}
+				{% endfor %}
+				</ul>
+			</div>
 		{% else %}
 			<p>No public documents.</p>
 		{% endif %}
@@ -41,7 +42,7 @@ $(function() {
 
 	<div id="comments-bar">
 		{% if comments %}
-			<h1>{{comments|length}} Comments</h1>
+			<h2>{{comments|length}} Comments</h2>
 			<div id="comments">
 				{% for comment in comments %}
 					{% if comment.document.public %}
