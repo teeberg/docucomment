@@ -30,7 +30,6 @@ body {
 }
 #slide-slide {
 	resize: horizontal;
-	overflow: hidden;
 	width: 600px;
 }
 
@@ -41,14 +40,14 @@ body {
 }
 #documents {
 	height: 400px;
-	overflow: auto;
+	overflow-y: auto;
 }
 
 #comments-bar {
 	margin-left: 40px;
 	float: left;
 	width: 400px;
-	overflow: auto;
+	overflow-y: auto;
 }
 #comments {
 	height: 300px;
