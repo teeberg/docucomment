@@ -102,6 +102,16 @@
 					loadComments(curpage);
 					return false;
 				}
+				else if(e.keyCode == 35) {
+					// End key
+					gotoPage(pdf.numPages);
+					return false;
+				}
+				else if(e.keyCode == 36) {
+					// Home key
+					gotoPage(1);
+					return false;
+				}
 			}
 		});
 		$(".prev").click(function() {
