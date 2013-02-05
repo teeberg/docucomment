@@ -3,6 +3,8 @@
 
 {% block title %}{{document.name}}{% endblock %}
 
+{% block breadcrumb %} &raquo; {{document.name}}{% endblock %}
+
 {% block head %}
 <script type="text/javascript">
 	function displayPage(pagenumber) {
@@ -168,8 +170,6 @@
 {% endblock %}
 
 {% block body %}
-<h1><a href="/">Home</a> &raquo; {{ document.name }}</h1>
-
 	<div id="slide-bar">
 		<div id="slide-slide">
 			<canvas id="slide-canvas"></canvas>
