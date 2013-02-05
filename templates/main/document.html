@@ -43,6 +43,7 @@
 					}).done(function(data) {
 						loadComments(curpage);
 					});
+					return false;
 				});
 				var head = $("<div class='comment-head'></div>");
 				var links = $("<div class='comment-links'></div>");
@@ -132,6 +133,9 @@
 				type: "post",
 				data: $(this).serialize()
 			}).done(function(data) {
+				$("#post-comment #id_comment").val("");
+				$("#post-comment #comment-id").val("");
+				$("#post-comment #comment-cancel").css("display", "none");
 				loadComments(curpage);
 			});
 			event.preventDefault();
