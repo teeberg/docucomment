@@ -9,9 +9,23 @@ body {
 	width: 100%;
 	background-color: #61649D;
 	color: white;
+	font-weight: bolder;
 }
 
-#header-title {
+#header div#right {
+	float: right;
+}
+
+#header a {
+	color: #ccf;
+}
+
+#header a:hover {
+	color: white;
+	text-decoration: none;
+}
+
+#header-content {
 	font-size: 100%;
 	padding: 5px;
 	margin: 0px auto;
