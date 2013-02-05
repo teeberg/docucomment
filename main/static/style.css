@@ -102,6 +102,12 @@ div.navigation a {
 	text-decoration: none;
 	margin: 5px;
 }
+div.navigation img {
+	height: 1em;
+}
+div.navigation {
+	vertical-align: middle;
+}
 div.navigation a:hover {
 	background: #eee;
 }

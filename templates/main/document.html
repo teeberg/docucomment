@@ -1,4 +1,5 @@
 {% extends "main/base.html" %}
+{% load staticfiles %}
 
 {% block title %}{{document.name}}{% endblock %}
 
@@ -175,11 +176,11 @@
 		</div>
 
 		<div class="navigation">
-			<a href="javascript:gotoPage(1)" class="first">&laquo;</a>
-			<a href="" class="prev">&lsaquo;</a>
+			<a href="javascript:gotoPage(1)" class="first"><img src="{% static "first.png" %}"/></a>
+			<a href="" class="prev"><img src="{% static "previous.png" %}"/></a>
 			<span id="slide-page">Page 1</span>
-			<a href="" class="next">&rsaquo;</a>
-			<a href ="" class="last">&raquo;</a>
+			<a href="" class="next"><img src="{% static "next.png" %}"/></a>
+			<a href ="" class="last"><img src="{% static "last.png" %}"/></a>
 		</div>
 		<p>Remember to bookmark this page.</p>
 		<p>People uploading the exact same file will be redirected here.</p>
