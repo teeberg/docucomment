@@ -8,4 +8,5 @@ urlpatterns = patterns('main.views',
 	url(r'^document/(?P<hash>\w+)/file$', 'send_file'),
 	url(r'^document/(?P<hash>\w+)/page/(?P<page>\d+)/comments$', 'comments'),
 	url(r'^document/(?P<hash>\w+)/page/(?P<page>\d+)/comment$', 'comment'),
+	url(r'^document/(?P<hash>\w+)/rename$', 'renamedocument'),
 )

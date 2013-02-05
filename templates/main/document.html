@@ -3,10 +3,17 @@
 
 {% block title %}{{document.name}}{% endblock %}
 
-{% block breadcrumb %} &raquo; {{document.name}}{% endblock %}
+{% block breadcrumb %} &raquo; <span class="current_document_name">{{document.name}}</span><span class="actions"> | <a href="javascript:rename()">Rename</a></span>{% endblock %}
 
 {% block head %}
 <script type="text/javascript">
+
+	var url = '/document/{{ document.hash }}/file';
+	var curpage = 0;
+	var pdf;
+	var startpage;
+	var document_name = "{{document.name}}";
+
 	function displayPage(pagenumber) {
 		pdf.getPage(pagenumber).then(function(page) {
 			var scale = 1.5;
@@ -67,11 +74,6 @@
 		window.history.pushState(page, "title", "/document/{{document.hash}}?page="+page);
 	}
 
-	var url = '/document/{{ document.hash }}/file';
-	var curpage = 0;
-	var pdf;
-	var startpage;
-
 	function nextPage() {
 		if(curpage < pdf.numPages) {
 			curpage++;
@@ -84,6 +86,29 @@
 			curpage--;
 			gotoPage(curpage);
 		}
+	}
+
+	function rename() {
+		var newname = window.prompt("Please enter a new name for the document:", document_name);
+		if(newname == null || newname.length == 0) { return; }
+		$.ajax({
+			url: '/document/{{ document.hash }}/rename',
+			type: 'post',
+			data: {name: newname}
+		}).done(function(data) {
+			data = JSON.parse(data);
+			if(data.status == 0) {
+				if('name_escaped' in data) {
+					document_name = data.name_escaped;
+					document.title = document_name;
+					$('.current_document_name').html(document_name);
+				}
+			}
+			else {
+				var error = 'message' in data ? data.message : 'An unknown error occurred.';
+				alert('The document could not be renamed: '+ error);
+			}
+		});
 	}
 
 	$(function() {

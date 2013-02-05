@@ -9,6 +9,8 @@ from main.models import Document, Comment
 from datetime import datetime
 from hashlib import sha1
 from mimetypes import guess_type
+import sys
+import traceback
 
 # Create your views here.
 
@@ -36,7 +38,7 @@ def home(request):
 
 def send_file(request, hash):
 	ds = Document.objects.filter(hash=hash)
-	if (len(ds) == 0):
+	if len(ds) == 0:
 		raise Http404
 	d = ds[0]
 	wrapper = FileWrapper(d.file)
@@ -47,7 +49,7 @@ def send_file(request, hash):
 
 def document(request, hash):
 	ds = Document.objects.filter(hash=hash)
-	if (len(ds) == 0):
+	if len(ds) == 0:
 		raise Http404
 	try:
 		page = int(request.GET['page']) if 'page' in request.GET else 1
@@ -57,7 +59,7 @@ def document(request, hash):
 
 def comments(request, hash, page):
 	ds = Document.objects.filter(hash=hash)
-	if (len(ds) == 0):
+	if len(ds) == 0:
 		raise Http404
 	d = ds[0]
 	comments = Comment.objects.filter(document=d, page=page, deleted=False)
@@ -66,6 +68,24 @@ def comments(request, hash, page):
 		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment}
 		cs.append(c)
 	return HttpResponse(simplejson.dumps(cs))
+
+def renamedocument(request, hash):
+	ret = {'status': 1}
+	d = Document.objects.get(hash=hash)
+	if d == None:
+		ret['message'] = 'No document exists with this hash.'
+	elif 'name' not in request.POST:
+		ret['message'] = 'No new name supplied.'
+	else:
+		try:
+			d.name = request.POST['name']
+			d.save()
+			ret['status'] = 0
+			ret['name_escaped'] = escape(d.name)
+		except Exception as ex:
+			ret['message'] = 'An exception was thrown. Please notify an administrator.'
+			traceback.print_exc(file=sys.stdout)
+	return HttpResponse(simplejson.dumps(ret))
 
 def comment(request, hash, page):
 	if request.method == 'POST':
