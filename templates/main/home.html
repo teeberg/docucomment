@@ -6,7 +6,13 @@
 <script type="text/javascript">
 $(function() {
 	$(".comment").click(function() {
-		window.location.href = $(this).data("url");
+		var url = $(this).data("url");
+		if(url == undefined) {
+			alert("This PDF is private. You must upload it or know its hash to view this comment.");
+		}
+		else {
+			window.location.href = url;
+		}
 		return false;
 	});
 });
