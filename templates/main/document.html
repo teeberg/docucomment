@@ -115,31 +115,39 @@
 
 		$(document).keydown(function(e) {
 			var target = e.target.tagName.toLowerCase();
-			if(!e.ctrlKey && !e.shiftKey && !e.altKey && target != 'input' && target != 'textarea') {
+			if(!e.shiftKey && !e.altKey && target != 'input' && target != 'textarea') {
 				if(e.keyCode == 37) {
 					// left arrow
-					previousPage();
+					if(e.ctrlKey) { curpage -= 5; }
+					else          { curpage--; }
+
+					gotoPage(Math.max(1, curpage));
 					return false;
 				}
 				else if(e.keyCode == 39) {
 					// right arrow
-					nextPage();
+					if(e.ctrlKey) { curpage += 5; }
+					else          { curpage++; }
+
+					gotoPage(Math.min(curpage, pdf.numPages));
 					return false;
 				}
-				else if(e.keyCode == 82) {
-					// R
-					loadComments(curpage);
-					return false;
-				}
-				else if(e.keyCode == 35) {
-					// End key
-					gotoPage(pdf.numPages);
-					return false;
-				}
-				else if(e.keyCode == 36) {
-					// Home key
-					gotoPage(1);
-					return false;
+				else if(!e.ctrlKey) {
+					else if(e.keyCode == 82) {
+						// R
+						loadComments(curpage);
+						return false;
+					}
+					else if(e.keyCode == 35) {
+						// End key
+						gotoPage(pdf.numPages);
+						return false;
+					}
+					else if(e.keyCode == 36) {
+						// Home key
+						gotoPage(1);
+						return false;
+					}
 				}
 			}
 		});
