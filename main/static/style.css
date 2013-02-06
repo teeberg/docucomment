@@ -22,6 +22,13 @@ body {
 	text-align: center;
 }
 
+div#navigation_documents {
+	padding: 5px;
+}
+div#navigation_documents img {
+	height: 1em;
+}
+
 #header a {
 	color: #ccf;
 	text-decoration: none;
@@ -121,6 +128,12 @@ div.navigation {
 }
 div.navigation a:hover {
 	background: #eee;
+}
+div#navigation_previous_document {
+	float: left;
+}
+div#navigation_next_document {
+	float: right;
 }
 button#comment-cancel {
 	display: none;
