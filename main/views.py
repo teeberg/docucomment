@@ -6,7 +6,7 @@ from django.utils.html import escape, strip_tags
 from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from main.models import Document, Comment
-from datetime import datetime
+from datetime import datetime, timedelta
 from hashlib import sha1
 from mimetypes import guess_type
 import sys
@@ -55,7 +55,11 @@ def document(request, hash):
 		page = int(request.GET['page']) if 'page' in request.GET else 1
 	except:
 		return redirect("/document/"+hash)
-	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': CommentForm(), 'page': page})
+	initial = {}
+	if "nickname" in request.COOKIES:
+		initial["nickname"] = request.COOKIES["nickname"]
+	form = CommentForm(initial=initial)
+	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': form, 'page': page})
 
 def comments(request, hash, page):
 	ds = Document.objects.filter(hash=hash)
@@ -108,7 +112,9 @@ def comment(request, hash, page):
 				c.document = d
 				c.page = page
 				c.save()
-				return HttpResponse(simplejson.dumps({"status": "ok"}));
+				response = HttpResponse(simplejson.dumps({"status": "ok"}))
+				response.set_cookie("nickname", c.nickname)
+				return response
 	raise Http404
 
 def login(request):
@@ -125,7 +131,7 @@ def deletecomment(request, hash, id):
 	c.deleted = True
 	c.save()
 	return HttpResponse(simplejson.dumps({"status": "ok"}));
-	
+
 class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
