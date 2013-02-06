@@ -8,8 +8,8 @@
 		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shCore.css" %}" />
 		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shThemeDefault.css" %}" />
 		<script type="text/javascript" src="{% static "docucomment.js" %}"></script>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
-		<script type="text/javascript" src="https://raw.github.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
+		<script type="text/javascript" src="{% static "jquery-1.9.1.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "pdf.js" %}"></script>
 		<script type="text/x-mathjax-config">
 			MathJax.Hub.Config({
 				tex2jax: {
@@ -57,7 +57,30 @@
 	<body class="{{ page }}">
 		<div id="header">
 			<div id="header-content">
-				<div id="header_right"><span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span><a href="http://piratepad.net/docucomment">Wishlist</a></div>
+				<div id="header_right">
+					<span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span>
+					<span id="help"><a href="#" onclick="return false">Help</a></span>
+					<div class="tooltip">
+						<div class="title">Commands while viewing a PDF</div>
+						<div class="content">
+							<table>
+								<tr>
+									<th>Left/Right Arrow</th>
+									<td>Move <b>one</b> page left/right</td>
+								</tr>
+								<tr>
+									<th>Ctrl+Left/Right Arrow</th>
+									<td>Move <b>5</b> pages left/right</td>
+								</tr>
+								<tr>
+									<th>R</th>
+									<td>Reload comments</td>
+								</tr>
+							</table>
+						</div>
+					</div> |
+					<a href="http://piratepad.net/docucomment">Wishlist</a>
+				</div>
 				<div id="header_left">
 					{% if page = "home" %}
 						Docucomment
@@ -66,7 +89,7 @@
 					{% endif %}
 					{% block breadcrumb %}{% endblock %}
 				</div>
-				<div id="header_center" class="clear">{% block header_center %}{% endblock %}</div>
+				<div id="header_center">{% block header_center %}{% endblock %}</div>
 			</div>
 		</div>
 		{% block body %}{% endblock %}

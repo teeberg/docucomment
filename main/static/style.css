@@ -20,6 +20,36 @@ body {
 }
 #header div#header_center {
 	text-align: center;
+	clear: both;
+}
+
+#header span#help + div.tooltip {
+	font-weight: normal;
+	visibility: hidden;
+	position: absolute;
+	right: 10px;
+	top: 30px;
+	background: #f9f9fb;
+	border: 1px #61649D solid;
+	color: black;
+	text-align: left;
+	border-radius: 2px;
+}
+
+#header span#help:hover + div.tooltip {
+	visibility: visible;
+}
+
+div.tooltip .title {
+	padding: 10px;
+	background: #bec2da;
+	font-weight: bolder;
+}
+div.tooltip .content {
+	padding: 10px;
+}
+div.tooltip td, div.tooltip th {
+	padding: 2px 5px;
 }
 
 div#navigation_documents {
