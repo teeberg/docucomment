@@ -117,18 +117,20 @@
 			if(!e.shiftKey && !e.altKey && target != 'input' && target != 'textarea') {
 				if(e.keyCode == 37) {
 					// left arrow
-					if(e.ctrlKey) { curpage -= 5; }
-					else          { curpage--; }
+					var newpage = curpage;
+					if(e.ctrlKey) { newpage -= 5; }
+					else          { newpage--; }
 
-					gotoPage(Math.max(1, curpage));
+					gotoPage(Math.max(1, newpage));
 					return false;
 				}
 				else if(e.keyCode == 39) {
 					// right arrow
-					if(e.ctrlKey) { curpage += 5; }
-					else          { curpage++; }
+					var newpage = curpage;
+					if(e.ctrlKey) { newpage += 5; }
+					else          { newpage++; }
 
-					gotoPage(Math.min(curpage, pdf.numPages));
+					gotoPage(Math.min(newpage, pdf.numPages));
 					return false;
 				}
 				else if(!e.ctrlKey) {
