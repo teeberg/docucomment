@@ -95,7 +95,6 @@
 			type: 'post',
 			data: {name: newname}
 		}).done(function(data) {
-			data = JSON.parse(data);
 			if(data.status == 0) {
 				if('name_escaped' in data) {
 					document_name = data.name_escaped;
@@ -114,31 +113,39 @@
 
 		$(document).keydown(function(e) {
 			var target = e.target.tagName.toLowerCase();
-			if(!e.ctrlKey && !e.shiftKey && !e.altKey && target != 'input' && target != 'textarea') {
+			if(!e.shiftKey && !e.altKey && target != 'input' && target != 'textarea') {
 				if(e.keyCode == 37) {
 					// left arrow
-					previousPage();
+					if(e.ctrlKey) { curpage -= 5; }
+					else          { curpage--; }
+
+					gotoPage(Math.max(1, curpage));
 					return false;
 				}
 				else if(e.keyCode == 39) {
 					// right arrow
-					nextPage();
+					if(e.ctrlKey) { curpage += 5; }
+					else          { curpage++; }
+
+					gotoPage(Math.min(curpage, pdf.numPages));
 					return false;
 				}
-				else if(e.keyCode == 82) {
-					// R
-					loadComments(curpage);
-					return false;
-				}
-				else if(e.keyCode == 35) {
-					// End key
-					gotoPage(pdf.numPages);
-					return false;
-				}
-				else if(e.keyCode == 36) {
-					// Home key
-					gotoPage(1);
-					return false;
+				else if(!e.ctrlKey) {
+					if(e.keyCode == 82) {
+						// R
+						loadComments(curpage);
+						return false;
+					}
+					else if(e.keyCode == 35) {
+						// End key
+						gotoPage(pdf.numPages);
+						return false;
+					}
+					else if(e.keyCode == 36) {
+						// Home key
+						gotoPage(1);
+						return false;
+					}
 				}
 			}
 		});
@@ -160,10 +167,16 @@
 				type: "post",
 				data: $(this).serialize()
 			}).done(function(data) {
-				$("#post-comment #id_comment").val("");
-				$("#post-comment #comment-id").val("");
-				$("#post-comment #comment-cancel").css("display", "none");
-				loadComments(curpage);
+				if(data.status == 0) {
+					$("#post-comment #id_comment").val("");
+					$("#post-comment #comment-id").val("");
+					$("#post-comment #comment-cancel").css("display", "none");
+					loadComments(curpage);
+					setNickname(data.safenick);
+				}
+				else {
+					alert('The comment could not be submitted: '+data.message);
+				}
 			});
 			event.preventDefault();
 		});
@@ -189,11 +202,28 @@
 			startpage = Math.max(1,Math.min(p.numPages,{{page}}));
 			displayPage(startpage);
 		});
+
+		splitCookies();
+		if('nickname' in cookies && cookies.nickname.length > 0) {
+			setNickname(cookies.nickname);
+		}
 	});
 </script>
 {% endblock %}
 
 {% block body %}
+	<div id="navigation_documents">
+		{% if previous != None %}
+			<img src="{% static "first.png" %}"/>
+			<a href="/document/{{ previous.hash }}">{{ previous.name }}</a>
+		{% endif %}
+		{% if previous != None and next != None %} | {% endif %}
+		{% if next != None %}
+			<a href="/document/{{ next.hash }}">{{ next.name }}</a>
+			<img src="{% static "last.png" %}"/>
+		{% endif %}
+	</div>
+	
 	<div id="slide-bar">
 		<div id="slide-slide">
 			<canvas id="slide-canvas"></canvas>
