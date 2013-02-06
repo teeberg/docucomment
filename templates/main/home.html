@@ -31,6 +31,8 @@ function displayComments(comments) {
 		var c = getCommentDiv(comment);
 		$(c).appendTo("#comments");
 	});
+	SyntaxHighlighter.highlight();
+	MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
 }
 
 function loadComments() {
