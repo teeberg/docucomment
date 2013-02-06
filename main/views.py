@@ -93,19 +93,32 @@ def renamedocument(request, hash):
 			traceback.print_exc(file=sys.stdout)
 	return HttpResponse(simplejson.dumps(ret))
 
+def setnickname(request):
+	response = {}
+	if 'name' in request.POST:
+		nickname = strip_tags(request.POST['name'])
+		response['status'] = 0
+		response['safenick'] = nickname
+		http = HttpResponse(simplejson.dumps(response))
+		http.set_cookie("nickname", nickname)
+		return http
+	else:
+		response['status'] = 1
+		response['message'] = 'No new nick provided.'
+		return HttpResponse(simplejson.dumps(response))
+
 def comment(request, hash, page):
 	if request.method == 'POST':
 		post = request.POST.copy()
 		post.update({'nickname': strip_tags(request.POST['nickname'])})
-		ds = Document.objects.filter(hash=hash)
-		if (len(ds) == 0):
-			raise Http404
-		d = ds[0]
+		d = Document.objects.get(hash=hash)
+		if d == None:
+			return HttpResponse(simplejson.dumps({"status": 1, "message": "There is no document with this hash."}))
 		if post.has_key('id') and len(post['id']) > 0:
 			commentForm = CommentForm(post, instance=Comment.objects.get(pk=int(post['id'])))
 			if (commentForm.is_valid()):
 				commentForm.save()
-				return HttpResponse(simplejson.dumps({"status": "ok"}));
+				return HttpResponse(simplejson.dumps({"status": 0}));
 		else:
 			commentForm = CommentForm(post)
 			if (commentForm.is_valid()):
@@ -114,7 +127,7 @@ def comment(request, hash, page):
 				c.document = d
 				c.page = page
 				c.save()
-				response = HttpResponse(simplejson.dumps({"status": "ok"}))
+				response = HttpResponse(simplejson.dumps({"status": 0, "safenick": c.nickname}))
 				response.set_cookie("nickname", c.nickname)
 				return response
 	raise Http404

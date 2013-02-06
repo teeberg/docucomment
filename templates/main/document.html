@@ -161,10 +161,17 @@
 				type: "post",
 				data: $(this).serialize()
 			}).done(function(data) {
-				$("#post-comment #id_comment").val("");
-				$("#post-comment #comment-id").val("");
-				$("#post-comment #comment-cancel").css("display", "none");
-				loadComments(curpage);
+				data = JSON.parse(data);
+				if(data.status == 0) {
+					$("#post-comment #id_comment").val("");
+					$("#post-comment #comment-id").val("");
+					$("#post-comment #comment-cancel").css("display", "none");
+					loadComments(curpage);
+					setNickname(data.safenick);
+				}
+				else {
+					alert('The comment could not be submitted: '+data.message);
+				}
 			});
 			event.preventDefault();
 		});
@@ -190,6 +197,11 @@
 			startpage = Math.max(1,Math.min(p.numPages,{{page}}));
 			displayPage(startpage);
 		});
+
+		splitCookies();
+		if('nickname' in cookies && cookies.nickname.length > 0) {
+			setNickname(cookies.nickname);
+		}
 	});
 </script>
 {% endblock %}
