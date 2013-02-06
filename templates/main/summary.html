@@ -1,0 +1,111 @@
+{% extends "main/base.html" %}
+{% load staticfiles %}
+
+{% block title %}{{document.name}}{% endblock %}
+
+{% block head %}
+<script>
+var sections = {}
+function displaySection(index) {
+	cursection = index;
+	section = sections[index];
+	$("#section-name").html(section["name"]);
+	$("#section-section").html(section["section"]);
+	$("#form-section-header").html("Edit Section");
+	$("#form-section #id_name").val(sections[cursection]["name"]);
+	$("#form-section #id_section").val(sections[cursection]["section_plain"]);
+	$("#form-section #section-id").val(sections[cursection]["id"]);
+	$("#form-section").css("display", "none");
+	$("#section-the-section").css("display", "block");
+	MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
+	SyntaxHighlighter.highlight();
+}
+function loadSections(index = null) {
+	$.ajax({
+		url: '/summary/{{ summary.id }}/sections',
+		type: 'get'
+	}).done(function(data) {
+		$(".select-section").parent().remove();
+		sections = $.parseJSON(data);
+		$.each(sections, function(i, sect) {
+			var a = $('<a href="" class="select-section" data-section-index="' + sect.index + '">' + sect.name + '</a>');
+			$(a).click(function(evt) {
+				displaySection($(evt.target).attr("data-section-index"));
+				return false;
+			});
+			var li = $('<li></li>');
+			$(a).appendTo(li);
+			$("#add-section").parent().before(li);
+		});
+		if (index) {
+			displaySection(index);
+		} else if ($.isEmptyObject(sections)) {
+			newSectionMode();
+		} else {
+			displaySection(cursection);
+		}
+	});
+}
+function newSectionMode() {
+	$("#form-section-header").html("New Section");
+	$("#form-section #id_name").val("");
+	$("#form-section #id_section").val("");
+	$("#form-section #section-id").val("");
+	$("#form-section").css("display", "block");
+	$("#section-the-section").css("display", "none");
+}
+cursection = 0;
+$(function() {
+	loadSections();
+	$("#add-section").click(function(evt) {
+		newSectionMode();
+		return false;
+	});
+	$("#edit-section").click(function(evt) {
+		$("#form-section").css("display", "block");
+		return false;
+	});
+	$("#form-section").submit(function(event) {
+		$.ajax({
+			url: '/summary/{{ summary.id }}/section',
+			type: "post",
+			data: $(this).serialize()
+		}).done(function(data) {
+			if (cursection) {
+				loadSections();
+			} else {
+				loadSections($.parseJSON(data)["index"]);
+			}
+		});
+		event.preventDefault();
+	});
+});
+</script>
+{% endblock %}
+
+{% block breadcrumb %} &raquo; <span class="current_document_name">{{summary.name}}</span><span class="actions"> | <a href="javascript:rename()">Rename</a></span>{% endblock %}
+
+{% block body %}
+	<div id="sections-bar">
+		<h2>Sections</h2>
+		<div id="sections">
+			<ul id="sections-list">
+				<li><a href="" id="add-section">+</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="section-bar">
+		<div style="display: none;" id="section-the-section">
+			<div id="section-head"><span id="section-name"></span><div id="section-links"><a id="edit-section" href="">edit</a></div></div>
+			<div id="section-section"></div>
+		</div>
+		<form style="display: none;" id="form-section" method="post" action="/summary/{{ summary.id }}/section">
+			<h3 id="form-section-header">Edit Section</h3>
+			<input type="hidden" name="summary_id" value="{{ summary.id }}" />
+			<input type="hidden" id="section-id" name="id" value="" />
+			{{ sectionForm.as_p }}
+			<button type="submit">Save</button>
+		</form>
+	</div>
+{% endblock %}
