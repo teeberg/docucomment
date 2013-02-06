@@ -5,30 +5,63 @@
 {% block head %}
 <script type="text/javascript">
 
+function getCommentDiv(comment) {
+	var c;
+	if (comment.document_public) {
+		c = $("<div class='comment' data-url='/document/" + comment.document_hash + "?page=" + comment.page + "'></div>");
+	} else {
+		c = $("<div class='comment'></div>");
+	}
+	var head = $("<div class='comment-head'></div>");
+	var links = $("<div class='comment-links'></div>");
+	if (comment.document_public) {
+		var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + "'>view</a>");
+		$(links).append(view_link);
+	}
+	$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
+	$(head).append(links);
+	$(c).append(head);
+	$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
+	return c;
+}
+
+function displayComments(comments) {
+	$("#comments").empty();
+	$.each(comments, function(i, comment) {
+		var c = getCommentDiv(comment);
+		$(c).appendTo("#comments");
+	});
+}
+
 function loadComments() {
 	$.getJSON("/comments", function(data) {
-		$("#comments").empty();
+		var hashtags = {};
+		displayComments(data);
 		$.each(data, function(i, comment) {
-			var c;
-			if (comment.document_public) {
-				console.log("public");
-				c = $("<div class='comment' data-url='/document/" + comment.document_hash + "?page=" + comment.page + "'></div>");
-			} else {
-				c = $("<div class='comment'></div>");
+			var matches = comment.comment_plain.match(/\#\w+/g);
+			for (var key in matches) {
+				var tag = matches[key];
+				if (!(tag in hashtags)) {
+					hashtags[tag] = {};
+				}
+				hashtags[tag][comment["id"]] = comment;
 			}
-			var head = $("<div class='comment-head'></div>");
-			var links = $("<div class='comment-links'></div>");
-			if (comment.document_public) {
-				var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + "'>view</a>");
-				$(links).append(view_link);
-			}
-			$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
-			$(head).append(links);
-			$(c).append(head);
-			$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
-
-			$(c).appendTo("#comments");
 		});
+
+		if (!hashtags.empty) {
+			$('<a href="">all</a>').click(function() {
+				displayComments(data);
+				return false;
+			}).appendTo("#hashtags");
+			for (var tag in hashtags) {
+				var hashtag = $('<a href="">' + tag + '</a>');
+				$(hashtag).click(function(e) {
+					displayComments(hashtags[$(e.target).html()]);
+					return false;
+				});
+				$(hashtag).appendTo("#hashtags");
+			}
+		}
 		MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
 		SyntaxHighlighter.highlight();
 	});
@@ -36,16 +69,6 @@ function loadComments() {
 
 $(function() {
 	loadComments();
-	$(".comment").click(function() {
-		var url = $(this).data("url");
-		if(url == undefined) {
-			alert("This PDF is private. You must upload it or know its hash to view this comment.");
-		}
-		else {
-			window.location.href = url;
-		}
-		return false;
-	});
 });
 
 </script>
@@ -81,6 +104,7 @@ $(function() {
 	<div id="comments-bar">
 		{% if comments %}
 			<h2>{{comments|length}} Comments</h2>
+			<div id="hashtags"></div>
 			<div id="comments">
 			</div>
 		{% else %}

@@ -73,6 +73,10 @@ body.home #comments {
 #comments-bar span.nickname {
 	font-weight: bold;
 }
+#hashtags a {
+	margin-right: 10px;
+}
+
 .comment {
 	margin: 10px 0;
 }

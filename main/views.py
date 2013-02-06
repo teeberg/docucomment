@@ -72,8 +72,10 @@ def comments(request, hash=None, page=None):
 		comments = Comment.objects.filter(document=d, page=page, deleted=False)
 	cs = []
 	for comment in comments:
-		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment, "document_hash": comment.document.hash, "page": comment.page, "document_public": comment.document.public}
+		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment, "page": comment.page, "document_public": comment.document.public}
 		cs.append(c)
+		if comment.document.public:
+			c["document_hash"] = comment.document.hash
 	return HttpResponse(simplejson.dumps(cs))
 
 def renamedocument(request, hash):
