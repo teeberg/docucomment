@@ -19,7 +19,7 @@ function loadComments() {
 			var head = $("<div class='comment-head'></div>");
 			var links = $("<div class='comment-links'></div>");
 			if (comment.document_public) {
-				var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + ">view</a>");
+				var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + "'>view</a>");
 				$(links).append(view_link);
 			}
 			$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
