@@ -36,6 +36,7 @@
 
 	function loadComments(page) {
 		$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
+			$("#comments").empty();
 			$.each(data, function(i, comment) {
 				var c = $("<div class='comment'></div>");
 				var edit_link = $("<a class=\"edit\" href=\"#\">edit</a>").click(function() {
