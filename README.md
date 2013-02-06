@@ -19,5 +19,6 @@ Navigate to some place where you want to put the library:
 
 Run it!
 * ./manage.py runserver 0.0.0.0:8000
+
 0.0.0.0 binds to all interfaces, i.e. makes you accessible from the outside.
 Leave it out if you want to run a local server.
