@@ -9,7 +9,7 @@ class Document(models.Model):
 	file = models.FileField(upload_to='files')
 	upload_date = models.DateTimeField('date uploaded')
 	hash = models.CharField(max_length=200)
-	public = models.BooleanField()
+	public = models.BooleanField(default=True)
 
 class Comment(models.Model):
 	nickname = models.CharField(max_length=32)
