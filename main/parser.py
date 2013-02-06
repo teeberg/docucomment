@@ -17,11 +17,11 @@ class Parser:
 				if page == None:
 					if title == None:
 						title = d.name
-					return '<a href="/document/%s">%s</a>' % (d.hash, title)
+					return '<a class="document-link" data-document-hash="%s" data-document-name="%s" data-page=%s href="/document/%s">%s</a>' % (d.hash, d.name, 0, d.hash, title)
 				else:
 					if title == None:
 						title = "{} (page {})".format(d.name, page)
-					return '<a href="/document/%s?page=%s">%s</a>' % (d.hash, page, title)
+					return '<a class="document-link" data-document-hash="%s" data-document-name="%s" data-page=%s href="/document/%s?page=%s">%s</a>' % (d.hash, d.name, page, d.hash, page, title)
 			return match.group(0)
 		res = link_regex.sub(make_ahref, res)
 		block_regex = re.compile(r"\[(\w+)(( \w+=\w+)*)\]")

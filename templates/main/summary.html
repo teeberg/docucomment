@@ -4,6 +4,7 @@
 {% block title %}{{document.name}}{% endblock %}
 
 {% block head %}
+<script type="text/javascript" src="{% static "slides.js" %}"></script>
 <script>
 var sections = {}
 function displaySection(index) {
@@ -17,6 +18,10 @@ function displaySection(index) {
 	$("#form-section #section-id").val(sections[cursection]["id"]);
 	$("#form-section").css("display", "none");
 	$("#section-the-section").css("display", "block");
+	$("#section-section a.document-link").click(function(evt) {
+		loadDocument($(evt.target).attr("data-document-hash"), $(evt.target).attr("data-document-name"), $(evt.target).attr("data-page"));
+		return false;
+	});
 	MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
 	SyntaxHighlighter.highlight();
 }
@@ -108,4 +113,6 @@ $(function() {
 			<button type="submit">Save</button>
 		</form>
 	</div>
+
+	{% include "main/slides.html" %}
 {% endblock %}

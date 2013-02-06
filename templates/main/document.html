@@ -6,35 +6,17 @@
 {% block breadcrumb %} &raquo; <span class="current_document_name">{{document.name}}</span><span class="actions"> | <a href="javascript:rename()">Rename</a></span>{% endblock %}
 
 {% block head %}
+<script type="text/javascript" src="{% static "slides.js" %}"></script>
 <script type="text/javascript">
 
-	var url = '/document/{{ document.hash }}/file';
-	var curpage = 0;
-	var pdf;
-	var startpage;
-	var document_name = "{{document.name}}";
-
-	function displayPage(pagenumber) {
-		pdf.getPage(pagenumber).then(function(page) {
-			var scale = 1.5;
-			var viewport = page.getViewport(scale);
-			var canvas = document.getElementById('slide-canvas');
-			var context = canvas.getContext('2d');
-			canvas.height = viewport.height;
-			canvas.width = viewport.width;
-			page.render({canvasContext: context, viewport: viewport});
-			curpage = pagenumber;
-			$("#slide-page").html("Page " + curpage + " of " + pdf.numPages);
-			loadComments(pagenumber);
-		});
+	pushPage = function(page) {
+		window.history.pushState(page, "title", "/document/{{document.hash}}?page="+page);
 	}
 
-	function gotoPage(page) {
-		if(page != curpage) {
-			pushPage(page);
-			displayPage(page);
-		}
+	pageLoaded = function() {
+		loadComments(curpage);
 	}
+
 
 	function loadComments(page) {
 		$.getJSON("/document/{{ document.hash }}/page/" + page + "/comments", function(data) {
@@ -72,24 +54,6 @@
 		});
 	}
 
-	function pushPage(page) {
-		window.history.pushState(page, "title", "/document/{{document.hash}}?page="+page);
-	}
-
-	function nextPage() {
-		if(curpage < pdf.numPages) {
-			curpage++;
-			gotoPage(curpage);
-		}
-	}
-
-	function previousPage() {
-		if(curpage > 1) {
-			curpage--;
-			gotoPage(curpage);
-		}
-	}
-
 	function rename() {
 		var newname = window.prompt("Please enter a new name for the document:", document_name);
 		if(newname == null || newname.length == 0) { return; }
@@ -114,58 +78,6 @@
 
 	$(function() {
 
-		$(document).keydown(function(e) {
-			var target = e.target.tagName.toLowerCase();
-			if(!e.shiftKey && !e.altKey && target != 'input' && target != 'textarea') {
-				if(e.keyCode == 37) {
-					// left arrow
-					var newpage = curpage;
-					if(e.ctrlKey) { newpage -= 5; }
-					else          { newpage--; }
-
-					gotoPage(Math.max(1, newpage));
-					return false;
-				}
-				else if(e.keyCode == 39) {
-					// right arrow
-					var newpage = curpage;
-					if(e.ctrlKey) { newpage += 5; }
-					else          { newpage++; }
-
-					gotoPage(Math.min(newpage, pdf.numPages));
-					return false;
-				}
-				else if(!e.ctrlKey) {
-					if(e.keyCode == 82) {
-						// R
-						loadComments(curpage);
-						return false;
-					}
-					else if(e.keyCode == 35) {
-						// End key
-						gotoPage(pdf.numPages);
-						return false;
-					}
-					else if(e.keyCode == 36) {
-						// Home key
-						gotoPage(1);
-						return false;
-					}
-				}
-			}
-		});
-		$(".prev").click(function() {
-			previousPage();
-			return false;
-		});
-		$(".next").click(function() {
-			nextPage();
-			return false;
-		});
-		$(".last").click(function() {
-			gotoPage(pdf.numPages);
-			return false;
-		});
 		$("#post-comment").submit(function(event) {
 			$.ajax({
 				url: '/document/{{ document.hash }}/page/' + curpage + '/comment',
@@ -201,17 +113,12 @@
 			}
 		};
 
-		PDFJS.disableWorker = true;
-		PDFJS.getDocument(url).then(function(p) {
-			pdf = p;
-			startpage = Math.max(1,Math.min(p.numPages,{{page}}));
-			displayPage(startpage);
-		});
-
 		splitCookies();
 		if('nickname' in cookies && cookies.nickname.length > 0) {
 			setNickname(cookies.nickname);
 		}
+
+		loadDocument("{{document.hash}}", "{{document.name}}", {{page}});
 	});
 </script>
 {% endblock %}
@@ -228,23 +135,9 @@
 			<img src="{% static "last.png" %}"/>
 		{% endif %}
 	</div>
+
+	{% include "main/slides.html" %}
 	
-	<div id="slide-bar">
-		<div id="slide-slide">
-			<canvas id="slide-canvas"></canvas>
-		</div>
-
-		<div class="navigation">
-			<a href="javascript:gotoPage(1)" class="first"><img src="{% static "first.png" %}"/></a>
-			<a href="" class="prev"><img src="{% static "previous.png" %}"/></a>
-			<span id="slide-page">Page 1</span>
-			<a href="" class="next"><img src="{% static "next.png" %}"/></a>
-			<a href ="" class="last"><img src="{% static "last.png" %}"/></a>
-		</div>
-		<p>Remember to bookmark this page.</p>
-		<p>People uploading the exact same file will be redirected here.</p>
-	</div>
-
 	<div id="comments-bar">
 		<h2>Comments</h2>
 		<div id="comments"></div>
@@ -257,5 +150,5 @@
 			<button type="button" id="comment-cancel">Cancel</button>
 		</form>
 	</div>
-	{% endblock %}
+{% endblock %}
 
