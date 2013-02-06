@@ -119,6 +119,14 @@ def setnickname(request):
 
 def comment(request, hash, page):
 	if request.method == 'POST':
+		try:
+			page = int(page)
+		except:
+			return JsonResponse({"status": 1, "message": "Non-numeric page supplied"})
+		else:
+			if page < 1:
+				return JsonResponse({"status": 1, "message": "Invalid page supplied: Must lie inside the PDF's boundaries"})
+
 		post = request.POST.copy()
 		post.update({'nickname': strip_tags(request.POST['nickname'])})
 		ds = Document.objects.filter(hash=hash)
