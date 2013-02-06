@@ -30,8 +30,10 @@
 	}
 
 	function gotoPage(page) {
-		pushPage(page);
-		displayPage(page);
+		if(page != curpage) {
+			pushPage(page);
+			displayPage(page);
+		}
 	}
 
 	function loadComments(page) {
