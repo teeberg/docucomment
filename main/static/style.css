@@ -41,7 +41,7 @@ body {
 }
 
 div.tooltip .title {
-	padding: 10px;
+	padding: 5px 10px;
 	background: #bec2da;
 	font-weight: bolder;
 }

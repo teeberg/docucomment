@@ -1,4 +1,5 @@
 {% extends "main/base.html" %}
+{% load staticfiles %}
 
 {% block title %}Docucomment{% endblock %}
 
@@ -36,7 +37,13 @@ function displayComments(comments) {
 }
 
 function loadComments() {
-	$.getJSON("/comments", function(data) {
+	$("#comments_loading").css("visibility", "visible");
+	$.ajax({
+		url: "/comments",
+		dataType: "json"
+	}).fail(function() {
+		$("#comments_loading").css("visibility", "hidden");
+	}).done(function(data) {
 		var hashtags = {};
 		displayComments(data);
 		$.each(data, function(i, comment) {
@@ -64,6 +71,7 @@ function loadComments() {
 				$(hashtag).appendTo("#hashtags");
 			}
 		}
+		$("#comments_loading").css("visibility", "hidden");
 	});
 }
 
@@ -102,7 +110,7 @@ $(function() {
 	</div>
 
 	<div id="comments-bar">
-		<h2>Comments</h2>
+		<h2>Comments<span id="comments_loading" style="visibility: hidden"> <img src="{% static "ajax-loader.gif" %}"/></span></h2>
 			<div id="hashtags"></div>
 			<div id="comments">
 		</div>
