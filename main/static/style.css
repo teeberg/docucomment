@@ -18,7 +18,7 @@ body {
 
 #header a {
 	color: #ccf;
-	text-decoration: none};
+	text-decoration: none;
 }
 
 #header a:hover {
@@ -30,6 +30,11 @@ body {
 	font-size: 100%;
 	padding: 5px;
 	margin: 0px auto;
+}
+
+#sections-bar {
+	float: left;
+	margin: 10px;
 }
 
 #slide-page {
@@ -50,12 +55,18 @@ body {
 
 #documents-bar {
 	float: left;
-	width: 500px;
+	width: 450px;
 	margin-left: 20px;
 }
 #documents {
 	height: 400px;
 	overflow-y: auto;
+}
+
+#summaries-bar {
+	width: 300px;
+	float: left;
+	margin-left: 40px;
 }
 
 #comments-bar {
@@ -76,6 +87,33 @@ body.home #comments {
 }
 #hashtags a {
 	margin-right: 10px;
+}
+
+#section-bar {
+	float: left;
+	margin: 10px;
+	width: 400px;
+}
+#section {
+	margin: 10px 0;
+}
+#section-head {
+	background: #eef;
+	padding: 5px;
+}
+#section-section {
+	white-space: pre-wrap;
+	padding: 5px;
+}
+#section-name {
+	font-weight: bold;
+}
+#section-links {
+	float: right;
+	display: inline;
+}
+#section-links a {
+	margin: 0 0 0 10px;
 }
 
 .comment {
@@ -99,6 +137,8 @@ div.comment-links a {
 	white-space: pre-wrap;
 	padding: 5px;
 }
+
+
 div.navigation {
 	text-align: center;
 	font-size: 1.5em;
@@ -136,7 +176,7 @@ textarea {
 	clear: both;
 }
 
-#form-post-document {
+#form-post-document, #form-post-summary {
 	background: #eef;
 	padding: 5px;
 }

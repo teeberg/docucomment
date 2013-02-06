@@ -81,7 +81,8 @@ $(function() {
 	<div id="documents-bar">
 		<h2>Documents</h2>
 		<form id="form-post-document" method="post" enctype="multipart/form-data">
-			<h3>Upload a document</h3>
+			<input type="hidden" name="action" value="post-document" />
+			<h3>Upload a Document</h3>
 			{{ uploadForm.as_p }}
 			<button type="submit">Upload</button>
 		</form>
@@ -103,11 +104,31 @@ $(function() {
 		{% endif %}
 	</div>
 
+	<div id="summaries-bar">
+		<h2>Summaries</h2>
+		<form id="form-post-summary" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="action" value="post-summary" />
+			<h3>Start a Summary</h3>
+			{{ summaryForm.as_p }}
+			<button type="submit">Start</button>
+		</form>
+		{% if summaries %}
+			<div id="summaries">
+				<ul>
+				{% for summary in summaries %}
+					<li><a href="summary/{{ summary.id }}">{{ summary.name }}</a></li>
+				{% endfor %}
+				</ul>
+			</div>
+		{% else %}
+			<p>No public documents.</p>
+		{% endif %}
+	</div>
+
 	<div id="comments-bar">
 		<h2>Comments</h2>
-			<div id="hashtags"></div>
-			<div id="comments">
-		</div>
+		<div id="hashtags"></div>
+		<div id="comments"></div>
 	</div>
 
 {% endblock %}

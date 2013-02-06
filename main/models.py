@@ -1,15 +1,29 @@
 from django.db import models
-from django.utils.html import escape
-import re
-import string
+from main.parser import Parser
 
-# Create your models here.
+class Summary(models.Model):
+	name = models.CharField(max_length=200)
+	creation_date = models.DateTimeField('date created')
+	deleted = models.BooleanField()
+
+class Section(models.Model):
+	name = models.CharField(max_length=200)
+	index = models.IntegerField()
+	summary = models.ForeignKey(Summary)
+	creation_date = models.DateTimeField('date created')
+	section = models.TextField()
+	deleted = models.BooleanField()
+
+	def section_parsed(self):
+		return Parser.parse(self.section)
+
 class Document(models.Model):
 	name = models.CharField(max_length=200)
 	file = models.FileField(upload_to='files')
 	upload_date = models.DateTimeField('date uploaded')
 	hash = models.CharField(max_length=200)
 	public = models.BooleanField(default=True)
+	deleted = models.BooleanField()
 
 class Comment(models.Model):
 	nickname = models.CharField(max_length=32)
@@ -20,48 +34,5 @@ class Comment(models.Model):
 	deleted = models.BooleanField()
 
 	def comment_parsed(self):
-		res = escape(self.comment)
-		link_regex = re.compile(r"\[\[([^\]/\|]+)(\/(\d+))?(?:\|([^\]]+))?\]\]")
-		def make_ahref(match):
-			d = match.groups()
-			pdf, pagepart, page, title = match.groups()
-			ds = Document.objects.filter(name=pdf)
-			if len(ds) >= 1:
-				d = ds[0]
-				if page == None:
-					if title == None:
-						title = d.name
-					return '<a href="/document/%s">%s</a>' % (d.hash, title)
-				else:
-					if title == None:
-						title = "{} (page {})".format(d.name, page)
-					return '<a href="/document/%s?page=%s">%s</a>' % (d.hash, page, title)
-			return match.group(0)
-		res = link_regex.sub(make_ahref, res)
-		block_regex = re.compile(r"\[(\w+)(( \w+=\w+)*)\]")
-		def make_block(match):
-			block_handlers = {'code': self.codeblock}
-			if match.group(1) in block_handlers:
-				args = {}
-				if match.group(2) != "":
-					for param in match.group(2)[1:].split(" "):
-						args[param.split("=")[0]] = param.split("=")[1]
-				return self.codeblock(args)
-			return match.group(0)
-		res = block_regex.sub(make_block, res)
+		return Parser.parse(self.comment)
 		
-		block_end_regex = re.compile(r"\[\/(\w+)\]")
-		def make_block_end(match):
-			blocks = {"code"}
-			if match.group(1) in blocks:
-				return "</%s>" % match.group(1)
-			return match.group(0)
-		res = block_end_regex.sub(make_block_end, res)
-		return res
-		
-	def codeblock(self, args):
-		if ("lang" in args):
-			lang = args['lang']
-		else:
-			lang = 'text'
-		return '<code class="brush: %s;">' % lang 
