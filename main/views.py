@@ -61,15 +61,18 @@ def document(request, hash):
 	form = CommentForm(initial=initial)
 	return render_to_response('main/document.html', {"document": ds[0], 'commentForm': form, 'page': page})
 
-def comments(request, hash, page):
-	ds = Document.objects.filter(hash=hash)
-	if len(ds) == 0:
-		raise Http404
-	d = ds[0]
-	comments = Comment.objects.filter(document=d, page=page, deleted=False)
+def comments(request, hash=None, page=None):
+	if hash == None:
+		comments = Comment.objects.filter(deleted=False).order_by('-creation_date')
+	else:
+		ds = Document.objects.filter(hash=hash)
+		if len(ds) == 0:
+			raise Http404
+		d = ds[0]
+		comments = Comment.objects.filter(document=d, page=page, deleted=False)
 	cs = []
 	for comment in comments:
-		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment}
+		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment, "document_hash": comment.document.hash, "page": comment.page, "document_public": comment.document.public}
 		cs.append(c)
 	return HttpResponse(simplejson.dumps(cs))
 

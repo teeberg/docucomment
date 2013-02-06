@@ -4,7 +4,38 @@
 
 {% block head %}
 <script type="text/javascript">
+
+function loadComments() {
+	$.getJSON("/comments", function(data) {
+		$("#comments").empty();
+		$.each(data, function(i, comment) {
+			var c;
+			if (comment.document_public) {
+				console.log("public");
+				c = $("<div class='comment' data-url='/document/" + comment.document_hash + "?page=" + comment.page + "'></div>");
+			} else {
+				c = $("<div class='comment'></div>");
+			}
+			var head = $("<div class='comment-head'></div>");
+			var links = $("<div class='comment-links'></div>");
+			if (comment.document_public) {
+				var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + ">view</a>");
+				$(links).append(view_link);
+			}
+			$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
+			$(head).append(links);
+			$(c).append(head);
+			$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
+
+			$(c).appendTo("#comments");
+		});
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
+		SyntaxHighlighter.highlight();
+	});
+}
+
 $(function() {
+	loadComments();
 	$(".comment").click(function() {
 		var url = $(this).data("url");
 		if(url == undefined) {
@@ -16,6 +47,7 @@ $(function() {
 		return false;
 	});
 });
+
 </script>
 {% endblock %}
 
@@ -50,22 +82,6 @@ $(function() {
 		{% if comments %}
 			<h2>{{comments|length}} Comments</h2>
 			<div id="comments">
-				{% for comment in comments %}
-					{% if comment.document.public %}
-						<div class="comment" data-url="document/{{comment.document.hash}}?page={{comment.page}}">
-					{% else %}
-						<div class="comment">
-					{% endif %}
-
-						<div class="comment-head">
-							<div class="comment-links">{{comment.document.name}}, page {{comment.page}}</div>
-							<span class="nickname">{{comment.nickname}}</span><br/>{{comment.creation_date}}
-						</div>
-					{% if comment.document.public %}
-						<div class="comment-comment">{{comment.comment|safe}}</div>
-					{% endif %}
-					</div>
-				{% endfor %}
 			</div>
 		{% else %}
 			<p>No comments.</p>
