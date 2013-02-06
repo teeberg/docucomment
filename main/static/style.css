@@ -98,8 +98,8 @@ div#navigation_documents img {
 
 #documents-bar {
 	float: left;
-	width: 450px;
-	margin-left: 20px;
+	width: 32%;
+	margin-left: 1%;
 }
 #documents {
 	height: 400px;
@@ -107,15 +107,15 @@ div#navigation_documents img {
 }
 
 #summaries-bar {
-	width: 300px;
+	width: 32%;
 	float: left;
-	margin-left: 40px;
+	margin-left: 1%;
 }
 
 #comments-bar {
-	margin-left: 40px;
+	margin: 0 1%;
 	float: left;
-	width: 400px;
+	width: 32%;
 }
 #comments {
 	height: 300px;
