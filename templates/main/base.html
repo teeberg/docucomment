@@ -57,13 +57,16 @@
 	<body class="{{ page }}">
 		<div id="header">
 			<div id="header-content">
-				<div id="right"><span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span></span><a href="http://piratepad.net/docucomment">Wishlist</a></div>
-				{% if page = "home" %}
-					Docucomment
-				{% else %}
-					<a href="/">Docucomment</a>
-				{% endif %}
-				{% block breadcrumb %}{% endblock %}
+				<div id="header_right"><span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span><a href="http://piratepad.net/docucomment">Wishlist</a></div>
+				<div id="header_left">
+					{% if page = "home" %}
+						Docucomment
+					{% else %}
+						<a href="/">Docucomment</a>
+					{% endif %}
+					{% block breadcrumb %}{% endblock %}
+				</div>
+				<div id="header_center">{% block header_center %}{% endblock %}</div>
 			</div>
 		</div>
 		{% block body %}{% endblock %}

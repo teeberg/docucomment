@@ -12,13 +12,19 @@ body {
 	font-weight: bolder;
 }
 
-#header div#right {
+#header div#header_right {
 	float: right;
+}
+#header div#header_left {
+	float: left;
+}
+#header div#header_center {
+	text-align: center;
 }
 
 #header a {
 	color: #ccf;
-	text-decoration: none};
+	text-decoration: none;
 }
 
 #header a:hover {

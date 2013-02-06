@@ -5,6 +5,17 @@
 
 {% block breadcrumb %} &raquo; <span class="current_document_name">{{document.name}}</span><span class="actions"> | <a href="javascript:rename()">Rename</a></span>{% endblock %}
 
+{% block header_center %}
+	{{ nextstr }}
+	{% if previous != None %}
+		Previous: <a href="/document/{{ previous.hash }}">{{ previous.name }}</a>
+	{% endif %}
+	{% if previous != None and next != None %} | {% endif %}
+	{% if next != None %}
+		Next: <a href="/document/{{ next.hash }}">{{ next.name }}</a>
+	{% endif %}
+{% endblock %}
+
 {% block head %}
 <script type="text/javascript">
 
