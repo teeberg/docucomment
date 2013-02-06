@@ -162,11 +162,13 @@ def deletecomment(request, hash, id):
 		cs = Comment.objects.filter(pk=id)
 		if len(cs) == 0:
 			ret.update(status=1, message="No comment with this ID exists")
-		elif c.document.id != d.id:
-			ret.update(status=1, message="Comment does not belong to the provided document")
 		else:
-			c.deleted = True
-			c.save()
+			c = cs[0]
+			if c.document.id != d.id:
+				ret.update(status=1, message="Comment does not belong to the provided document")
+			else:
+				c.deleted = True
+				c.save()
 	return JsonResponse(ret)
 
 class JsonResponse(HttpResponse):
