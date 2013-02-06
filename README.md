@@ -10,12 +10,14 @@ Dependencies (sudo apt-get install):
 * python-django
 * sqlite3
 
-Navigate to some place where you want to put the library
+Navigate to some place where you want to put the library:
 * git clone https://github.com/fuligginoso/docucomment
 * cd docucomment
 * ./manage.py syncdb
 * chmod a+wr database
 * chmod a+wr database/docucomment.db
 
-to test it:
-* python manage.py runserver 0.0.0.0:8000
+Run it!
+* ./manage.py runserver 0.0.0.0:8000
+0.0.0.0 binds to all interfaces, i.e. makes you accessible from the outside.
+Leave it out if you want to run a local server.
