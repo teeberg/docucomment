@@ -58,7 +58,11 @@
 		<div id="header">
 			<div id="header-content">
 				<div id="right"><a href="http://piratepad.net/docucomment">Wishlist</a></div>
-				<a href="/">Home</a>
+				{% if page = "home" %}
+					Docucomment
+				{% else %}
+					<a href="/">Docucomment</a>
+				{% endif %}
 				{% block breadcrumb %}{% endblock %}
 			</div>
 		</div>

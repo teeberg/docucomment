@@ -31,10 +31,7 @@ def home(request):
 	else:
 		uploadForm = DocumentUploadForm()
 	
-	comments = Comment.objects.order_by('-creation_date').filter(deleted=False)
-	for c in comments:
-		c.comment = c.comment_parsed()
-	return render_to_response('main/home.html', {"page": "home", "documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm, "comments": comments})
+	return render_to_response('main/home.html', {"page": "home", "documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm})
 
 def send_file(request, hash):
 	ds = Document.objects.filter(hash=hash)

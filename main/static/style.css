@@ -18,6 +18,7 @@ body {
 
 #header a {
 	color: #ccf;
+	text-decoration: none};
 }
 
 #header a:hover {
