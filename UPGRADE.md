@@ -4,13 +4,10 @@ Here is a list of commits with db changes and what to do to upgrade
 
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE "main_document" (
+CREATE TABLE "main_summary" (
     "id" integer NOT NULL PRIMARY KEY,
     "name" varchar(200) NOT NULL,
-    "file" varchar(100) NOT NULL,
-    "upload_date" datetime NOT NULL,
-    "hash" varchar(200) NOT NULL,
-    "public" bool NOT NULL,
+    "creation_date" datetime NOT NULL,
     "deleted" bool NOT NULL
 );
 
