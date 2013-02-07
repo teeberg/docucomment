@@ -1,15 +1,15 @@
 
 var hash;
-var pdf;
+var doc;
+var docs = {};
 var curpage = 0;
 var startpage;
 var document_name;
 var pushPage = function(page) {};
 var pageLoaded = function() {};
 
-
 function displayPage(pagenumber) {
-	pdf.getPage(pagenumber).then(function(page) {
+	doc.getPage(pagenumber).then(function(page) {
 		var scale = 1.5;
 		var viewport = page.getViewport(scale);
 		var canvas = document.getElementById('slide-canvas');
@@ -18,7 +18,7 @@ function displayPage(pagenumber) {
 		canvas.width = viewport.width;
 		page.render({canvasContext: context, viewport: viewport});
 		curpage = pagenumber;
-		$("#slide-page").html("Page " + curpage + " of " + pdf.numPages);
+		$("#slide-page").html("Page " + curpage + " of " + doc.numPages);
 		$("#link-to-document").val("[[" + document_name + "]]");
 		$("#link-to-document-with-text").val("[[" + document_name + "|Some Text]]");
 		$("#link-to-page").val("[[" + document_name + "/" + pagenumber + "]]");
@@ -35,7 +35,7 @@ function gotoPage(page) {
 }
 
 function nextPage() {
-	if(curpage < pdf.numPages) {
+	if(curpage < doc.numPages) {
 		gotoPage(curpage+1);
 	}
 }
@@ -51,13 +51,22 @@ function loadDocument(h, name, page) {
 		displayPage(startpage);
 	} else {
 		PDFJS.disableWorker = true;
-		PDFJS.getDocument("/document/" + h + "/file").then(function(p) {
-			pdf = p;
+		var func = function() {
 			hash = h;
-			startpage = Math.max(1,Math.min(p.numPages,page))
 			document_name = name;
+			startpage = Math.max(1,Math.min(doc.numPages,page))
 			displayPage(startpage);
-		});
+		};
+		if (docs[name]) {
+			doc = docs[name];
+			func();
+		} else {
+			PDFJS.getDocument("/document/" + h + "/file").then(function(p) {
+				doc = p;
+				docs[name] = doc;
+				func();
+			});
+		}
 	}
 }
 
@@ -80,7 +89,7 @@ $(function() {
 				if(e.ctrlKey) { newpage += 5; }
 				else          { newpage++; }
 
-				gotoPage(Math.min(newpage, pdf.numPages));
+				gotoPage(Math.min(newpage, doc.numPages));
 				return false;
 			}
 			else if(!e.ctrlKey) {
@@ -91,7 +100,7 @@ $(function() {
 				}
 				else if(e.keyCode == 35) {
 					// End key
-					gotoPage(pdf.numPages);
+					gotoPage(doc.numPages);
 					return false;
 				}
 				else if(e.keyCode == 36) {
@@ -115,7 +124,7 @@ $(function() {
 		return false;
 	});
 	$(".last").click(function() {
-		gotoPage(pdf.numPages);
+		gotoPage(doc.numPages);
 		return false;
 	});
 });
