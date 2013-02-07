@@ -41,3 +41,10 @@ function setNickname(nickname) {
 	$('#id_nickname').parent().css('display', 'none');
 	$('#id_nickname').val(nickname);
 }
+
+$(function() {
+	// browser doesn't seem to respect selectd="selected"
+	$("option.default").each(function(i, elem) {
+		$(elem).parent().val($(elem).val());
+	});
+});

@@ -80,6 +80,11 @@ div#navigation_documents img {
 	margin: 10px;
 }
 
+#document-select-bar {
+	float: left;
+	margin: 10px;
+}
+
 #slide-page {
 	text-align: center;
 }
@@ -235,6 +240,7 @@ li.private { color: #aaa; }
 	font-size: 80%;
 }
 
-input {
+input, select, textarea {
 	font-size: inherit;
 }
+

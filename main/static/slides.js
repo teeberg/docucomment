@@ -7,6 +7,7 @@ var startpage;
 var document_name;
 var pushPage = function(page) {};
 var pageLoaded = function() {};
+var documentLoaded = function() {};
 
 function displayPage(pagenumber) {
 	doc.getPage(pagenumber).then(function(page) {
@@ -60,11 +61,13 @@ function loadDocument(h, name, page) {
 		if (docs[name]) {
 			doc = docs[name];
 			func();
+			documentLoaded();
 		} else {
 			PDFJS.getDocument("/document/" + h + "/file").then(function(p) {
 				doc = p;
 				docs[name] = doc;
 				func();
+				documentLoaded();
 			});
 		}
 	}

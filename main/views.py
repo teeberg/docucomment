@@ -63,7 +63,8 @@ def summary(request, id):
 	if s == None:
 		raise Http404
 	sectionForm = SectionForm()
-	return render_to_response('main/summary.html', {"summary": s, "sectionForm": sectionForm})
+	documents = Document.objects.filter(deleted=False, public=True).order_by("name")
+	return render_to_response('main/summary.html', {"summary": s, "sectionForm": sectionForm, "documents": documents})
 
 def document(request, hash):
 	ds = Document.objects.filter(hash=hash)

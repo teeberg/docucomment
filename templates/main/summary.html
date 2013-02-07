@@ -7,6 +7,9 @@
 <script type="text/javascript" src="{% static "slides.js" %}"></script>
 <script>
 var sections = {}
+documentLoaded = function() {
+	$("#document-select").val(hash);
+}
 function displaySection(index) {
 	cursection = index;
 	section = sections[index];
@@ -60,6 +63,10 @@ function newSectionMode() {
 	$("#section-the-section").css("display", "none");
 }
 cursection = 0;
+var documents = {
+	{% for document in documents %} "{{ document.hash }}": "{{ document.name }}",
+	{% endfor %}
+};
 $(function() {
 	loadSections();
 	$("#add-section").click(function(evt) {
@@ -83,6 +90,10 @@ $(function() {
 			}
 		});
 		event.preventDefault();
+	});
+	$("#document-select").change(function(evt) {
+		loadDocument($(evt.target).val(), documents[$(evt.target).val()], 0);
+		return false;
 	});
 });
 </script>
@@ -112,6 +123,16 @@ $(function() {
 			{{ sectionForm.as_p }}
 			<button type="submit">Save</button>
 		</form>
+	</div>
+
+	<div id="document-select-bar">
+		Select a Document:
+		<select id="document-select">
+			<option selected=true class="default"></option>
+			{% for document in documents %}
+				<option value="{{ document.hash }}">{{ document.name }}</option>
+			{% endfor %}
+		</select>
 	</div>
 
 	{% include "main/slides.html" %}
