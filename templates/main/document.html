@@ -28,6 +28,7 @@
 					$("#post-comment #id_comment").val(comment['comment_plain']);
 					$("#post-comment #comment-cancel").css("display", "inline");
 					$("#post-comment #comment-id").val(comment['id']);
+					$("#post-comment-header").html("Edit Comment");
 					return false;
 				});
 				var delete_link = $("<a class=\"delete\" href=\"#\">delete</a>").click(function() {
@@ -88,8 +89,11 @@
 					$("#post-comment #id_comment").val("");
 					$("#post-comment #comment-id").val("");
 					$("#post-comment #comment-cancel").css("display", "none");
+					$("#post-comment-header").html("New Comment");
 					loadComments(curpage);
-					setNickname(data.safenick);
+					if (data.safenick) {
+						setNickname(data.safenick);
+					}
 				}
 				else {
 					alert('The comment could not be submitted: '+data.message);
@@ -142,8 +146,8 @@
 		<h2>Comments</h2>
 		<div id="comments"></div>
 
-		<h2>New Comment</h2>
 		<form id="post-comment" method="post">
+			<h2 id="post-comment-header">New Comment</h2>
 			{{ commentForm.as_p }}
 			<input type="hidden" id="comment-id" name="id" value=""/>
 			<button type="submit">Comment</button>

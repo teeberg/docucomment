@@ -230,3 +230,11 @@ textarea {
 	padding: 5px;
 }
 li.private { color: #aaa; }
+
+#links-to-document {
+	font-size: 80%;
+}
+
+input {
+	font-size: inherit;
+}

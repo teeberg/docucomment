@@ -215,7 +215,6 @@ def section(request, summary):
 				s.summary = su
 				ss = Section.objects.filter(summary=su)
 				if (len(ss) > 0):
-					print ss.aggregate(Max("index"))
 					s.index = ss.aggregate(Max("index"))['index__max'] + 1
 				else:
 					s.index = 0

@@ -19,6 +19,10 @@ function displayPage(pagenumber) {
 		page.render({canvasContext: context, viewport: viewport});
 		curpage = pagenumber;
 		$("#slide-page").html("Page " + curpage + " of " + pdf.numPages);
+		$("#link-to-document").val("[[" + document_name + "]]");
+		$("#link-to-document-with-text").val("[[" + document_name + "|Some Text]]");
+		$("#link-to-page").val("[[" + document_name + "/" + pagenumber + "]]");
+		$("#link-to-page-with-text").val("[[" + document_name + "/" + pagenumber + "|Some Text]]");
 		pageLoaded();
 	});
 }
@@ -51,7 +55,7 @@ function loadDocument(h, name, page) {
 			pdf = p;
 			hash = h;
 			startpage = Math.max(1,Math.min(p.numPages,page))
-			documentName = name;
+			document_name = name;
 			displayPage(startpage);
 		});
 	}
