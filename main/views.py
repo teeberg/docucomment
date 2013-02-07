@@ -169,7 +169,8 @@ def comment(request, hash, page):
 			return JsonResponse({"status": 1, "message": "There is no document with this hash."})
 		d = ds[0]
 		if post.has_key('id') and len(post['id']) > 0:
-			instance = Comment.objects.filter(pk=int(post['id']))
+			instance = Comment.objects.get(pk=int(post['id']))
+			print dir(instance.deleted)
 			if len(instance) == 0:
 				return JsonResponse({"status": 1, "message": "Trying to update non-existing comment."})
 			elif instance.deleted == True:
@@ -233,7 +234,7 @@ def deletecomment(request, hash, id):
 		ret.update(status=1, message="No document with this ID exists")
 	else:
 		d = ds[0]
-		cs = Comment.objects.filter(pk=id)
+		cs = Comment.objects.get(pk=id)
 		if len(cs) == 0:
 			ret.update(status=1, message="No comment with this ID exists")
 		else:
