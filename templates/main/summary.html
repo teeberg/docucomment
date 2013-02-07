@@ -112,10 +112,6 @@ $(function() {
 	</div>
 
 	<div id="section-bar">
-		<div style="display: none;" id="section-the-section">
-			<div id="section-head"><span id="section-name"></span><div id="section-links"><a id="edit-section" href="">edit</a></div></div>
-			<div id="section-section"></div>
-		</div>
 		<form style="display: none;" id="form-section" method="post" action="/summary/{{ summary.id }}/section">
 			<h3 id="form-section-header">Edit Section</h3>
 			<input type="hidden" name="summary_id" value="{{ summary.id }}" />
@@ -123,6 +119,10 @@ $(function() {
 			{{ sectionForm.as_p }}
 			<button type="submit">Save</button>
 		</form>
+		<div style="display: none;" id="section-the-section">
+			<div id="section-head"><span id="section-name"></span><div id="section-links"><a id="edit-section" href="">edit</a></div></div>
+			<div id="section-section"></div>
+		</div>
 	</div>
 
 	<div id="document-select-bar">
