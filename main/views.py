@@ -175,7 +175,7 @@ def comment(request, hash, page):
 			elif instance.deleted == True:
 				return JsonResponse({"status": 1, "message": "This comment has been deleted."})
 
-			commentForm = CommentForm(post, instance=instance[0])
+			commentForm = CommentForm(post, instance=instance)
 			if (commentForm.is_valid()):
 				commentForm.save()
 				return JsonResponse({"status": 0})
