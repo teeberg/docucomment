@@ -20,6 +20,7 @@ function displayPage(pagenumber) {
 		page.render({canvasContext: context, viewport: viewport});
 		curpage = pagenumber;
 		$("#slide-page").html("Page " + curpage + " of " + doc.numPages);
+		$("#slide-page").attr("href", "/document/" + hash + "?page=" + pagenumber);
 		$("#link-to-document").val("[[" + document_name + "]]");
 		$("#link-to-document-with-text").val("[[" + document_name + "|Some Text]]");
 		$("#link-to-page").val("[[" + document_name + "/" + pagenumber + "]]");
@@ -58,14 +59,14 @@ function loadDocument(h, name, page) {
 			startpage = Math.max(1,Math.min(doc.numPages,page))
 			displayPage(startpage);
 		};
-		if (docs[name]) {
-			doc = docs[name];
+		if (docs[h]) {
+			doc = docs[h];
 			func();
 			documentLoaded();
 		} else {
 			PDFJS.getDocument("/document/" + h + "/file").then(function(p) {
 				doc = p;
-				docs[name] = doc;
+				docs[h] = doc;
 				func();
 				documentLoaded();
 			});
