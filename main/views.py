@@ -20,11 +20,11 @@ def home(request):
 	if request.method == 'POST':
 		if request.POST['action'] == "post-document":
 			uploadForm = DocumentUploadForm(request.POST, request.FILES)
-			if (uploadForm.is_valid()):
+			if uploadForm.is_valid():
 				file = request.FILES['file']
 				hash = sha1("blob " + str(file.size) + "\0" + file.read()).hexdigest()
 				ds = Document.objects.filter(hash=hash)
-				if (len(ds) == 0):
+				if len(ds) == 0:
 					d = uploadForm.save(commit=False)
 					d.hash = hash
 					d.name = file.name
@@ -33,7 +33,7 @@ def home(request):
 				return redirect("/document/" + hash)
 		elif request.POST['action'] == "post-summary":
 			summaryForm = SummaryForm(request.POST)
-			if (summaryForm.is_valid()):
+			if summaryForm.is_valid():
 				s = summaryForm.save(commit=False)
 				s.creation_date = datetime.now()
 				s.save()
@@ -52,7 +52,7 @@ def send_file(request, hash):
 	wrapper = FileWrapper(d.file)
 	response = HttpResponse(wrapper, content_type=guess_type(d.name)[0])
 	response['Content-Length'] = d.file.size
-	response['Content-Disposition'] = "attachment; filename=\"%s\"" % d.name
+	response['Content-Disposition'] = "attachment; filename=\"{}\"".format(d.name)
 	return response
 
 def summary(request, id):
@@ -85,7 +85,7 @@ def document(request, hash):
 	except: next     = None
 
 	if "nickname" in request.COOKIES:
-		initial["nickname"] = request.COOKIES["nickname"]
+		initial.update(nickname=request.COOKIES['nickname'])
 	form = CommentForm(initial=initial)
 	return render_to_response('main/document.html', {"document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
 
@@ -117,25 +117,24 @@ def comments(request, hash=None, page=None):
 		c = {"id": comment.id, "nickname": escape(comment.nickname), "nickname_plain": comment.nickname, "comment": comment.comment_parsed(), "comment_plain": comment.comment, "page": comment.page, "document_public": comment.document.public}
 		cs.append(c)
 		if comment.document.public:
-			c["document_hash"] = comment.document.hash
+			c.update(document_hash=comment.document.hash)
 	return JsonResponse(cs)
 
 def renamedocument(request, hash):
 	ret = {'status': 1}
 	ds = Document.objects.filter(hash=hash)
 	if len(ds) == 0:
-		ret['message'] = 'No document exists with this hash.'
+		ret.update(message='No document exists with this hash.')
 	elif 'name' not in request.POST:
-		ret['message'] = 'No new name supplied.'
+		ret.update(message='No new name supplied.')
 	else:
 		d = ds[0]
 		try:
 			d.name = request.POST['name']
 			d.save()
-			ret['status'] = 0
-			ret['name_escaped'] = escape(d.name)
+			ret.update(status=0, name_escaped = escape(d.name))
 		except Exception as ex:
-			ret['message'] = 'An exception was thrown. Please notify an administrator.'
+			ret.update(message='An exception was thrown. Please notify an administrator.')
 			traceback.print_exc(file=sys.stdout)
 	return JsonResponse(ret)
 
@@ -143,14 +142,12 @@ def setnickname(request):
 	response = {}
 	if 'name' in request.POST:
 		nickname = strip_tags(request.POST['name'])
-		response['status'] = 0
-		response['safenick'] = nickname
+		response.update(status=0, safenick=nickname)
 		http = JsonResponse(response)
 		http.set_cookie("nickname", nickname)
 		return http
 	else:
-		response['status'] = 1
-		response['message'] = 'No new nick provided.'
+		response.update(status=1, message='No new nick provided.')
 		return JsonResponse(response)
 
 def comment(request, hash, page):
@@ -177,7 +174,7 @@ def comment(request, hash, page):
 				return JsonResponse({"status": 1, "message": "This comment has been deleted."})
 
 			commentForm = CommentForm(post, instance=instance)
-			if (commentForm.is_valid()):
+			if commentForm.is_valid():
 				commentForm.save()
 				return JsonResponse({"status": 0})
 		else:
@@ -215,7 +212,7 @@ def section(request, summary):
 				s.creation_date = datetime.now()
 				s.summary = su
 				ss = Section.objects.filter(summary=su)
-				if (len(ss) > 0):
+				if len(ss) > 0:
 					s.index = ss.aggregate(Max("index"))['index__max'] + 1
 				else:
 					s.index = 0
@@ -224,7 +221,8 @@ def section(request, summary):
 	raise Http404
 
 def login(request):
-	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(request)})
+	data = request.POST if len(request.POST) > 0 else None
+	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(data=data)})
 
 def deletecomment(request, hash, id):
 	ds = Document.objects.filter(hash=hash)
@@ -236,12 +234,11 @@ def deletecomment(request, hash, id):
 		c = Comment.objects.get(pk=id)
 		if c == None:
 			ret.update(status=1, message="No comment with this ID exists")
+		elif c.document.id != d.id:
+			ret.update(status=1, message="Comment does not belong to the provided document")
 		else:
-			if c.document.id != d.id:
-				ret.update(status=1, message="Comment does not belong to the provided document")
-			else:
-				c.deleted = True
-				c.save()
+			c.deleted = True
+			c.save()
 	return JsonResponse(ret)
 
 class JsonResponse(HttpResponse):
