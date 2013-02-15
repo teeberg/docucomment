@@ -1,12 +1,15 @@
 from django import forms
-from django.http import Http404, HttpResponse
+from django.contrib import auth
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect, render, render_to_response
+from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import escape, strip_tags
-from django.shortcuts import render_to_response, redirect
-from django.contrib.auth.forms import AuthenticationForm
 from main.models import Document, Comment, Summary, Section
 from datetime import datetime, timedelta
 from hashlib import sha1
@@ -221,8 +224,20 @@ def section(request, summary):
 	raise Http404
 
 def login(request):
-	data = request.POST if len(request.POST) > 0 else None
-	return render_to_response('main/login.html', {"loginForm": AuthenticationForm(data=data)})
+	args = {}
+	if not request.user.is_authenticated() and request.POST:
+		form = AuthenticationForm(request=request, data=request.POST)
+		args.update(form=form)
+
+		# the formular validation will check if this cookie is set
+		request.session.set_test_cookie()
+
+		if form.is_valid():
+			auth.login(request, form.get_user())
+	else:
+		args.update(form=AuthenticationForm())
+
+	return render(request, 'main/login.html', args)
 
 def deletecomment(request, hash, id):
 	ds = Document.objects.filter(hash=hash)

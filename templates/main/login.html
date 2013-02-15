@@ -3,9 +3,16 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-<form method="post">
-	<h2>Login</h2>
-	{{ loginForm.as_p }}
-	<button type="submit">Login</button>
-</form>
+{% if not request.user.is_authenticated %}
+	<p>Welcome, new user. Please log in!</p>
+
+	<form method="post">
+		<h2>Login</h2>
+		{{ form.as_p }}
+		<button type="submit">Login</button>
+	</form>
+
+{% else %}
+	<p>Welcome, {{ request.user }}. Thanks for logging in.</p>
+{% endif %}
 {% endblock %}

@@ -89,10 +89,11 @@ SECRET_KEY = 'qdzty2bmti=^s5&amp;e_()s^t9h^%@0igzixls=2$8aozct91g!$e'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    #'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+	'django.contrib.auth.context_processors.auth',
+	'django.core.context_processors.request',
 	'django.core.context_processors.static',
 )
 
