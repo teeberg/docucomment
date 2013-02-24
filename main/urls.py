@@ -2,7 +2,9 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('main.views',
 	url(r'^$', 'home'),
-	url(r'^login?$', 'login'),
+	url(r'^login$', 'login'),
+	url(r'^logout$', 'logout'),
+	url(r'^register$', 'register'),
 	url(r'^comments$', 'comments'),
 	url(r'^setnickname$', 'setnickname'),
 	url(r'^summary/(?P<id>\d+)$', 'summary'),

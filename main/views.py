@@ -1,12 +1,12 @@
 from django import forms
-from django.contrib import auth
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import auth, messages
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.servers.basehttp import FileWrapper
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import redirect, render
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import escape, strip_tags
@@ -45,7 +45,7 @@ def home(request):
 	uploadForm = DocumentUploadForm()
 	summaryForm = SummaryForm()
 	
-	return render_to_response('main/home.html', {"page": "home", "documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm, "summaries": Summary.objects.order_by('name').all(), "summaryForm": summaryForm})
+	return render(request, 'main/home.html', {"page": "home", "documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm, "summaries": Summary.objects.order_by('name').all(), "summaryForm": summaryForm})
 
 def send_file(request, hash):
 	ds = Document.objects.filter(hash=hash)
@@ -67,7 +67,7 @@ def summary(request, id):
 		raise Http404
 	sectionForm = SectionForm()
 	documents = Document.objects.filter(deleted=False, public=True).order_by("name")
-	return render_to_response('main/summary.html', {"summary": s, "sectionForm": sectionForm, "documents": documents})
+	return render(request, 'main/summary.html', {"summary": s, "sectionForm": sectionForm, "documents": documents})
 
 def document(request, hash):
 	ds = Document.objects.filter(hash=hash)
@@ -90,7 +90,7 @@ def document(request, hash):
 	if "nickname" in request.COOKIES:
 		initial.update(nickname=request.COOKIES['nickname'])
 	form = CommentForm(initial=initial)
-	return render_to_response('main/document.html', {"document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
+	return render(request, 'main/document.html', {"document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
 
 def sections(request, summary):
 	try:
@@ -234,10 +234,35 @@ def login(request):
 
 		if form.is_valid():
 			auth.login(request, form.get_user())
+			messages.success(request, 'You are now logged in.')
+			return redirect('/')
 	else:
 		args.update(form=AuthenticationForm())
 
 	return render(request, 'main/login.html', args)
+
+def logout(request):
+	auth.logout(request)
+	messages.success(request, 'You have been logged out.')
+	return redirect('/')
+
+def register(request):
+	args = {}
+	if request.user.is_authenticated():
+		return redirect('/')
+	elif not request.user.is_authenticated() and request.POST:
+		form = UserCreationForm(request.POST)
+		args.update(form=form)
+		if form.is_valid():
+			user = form.save()
+			messages.success(request, 'Your account has been created!')
+			return redirect('/login')
+	elif not request.POST:
+		args.update(form=UserCreationForm())
+	else:
+		return redirect('/')
+	
+	return render(request, 'main/register.html', args)
 
 def deletecomment(request, hash, id):
 	ds = Document.objects.filter(hash=hash)

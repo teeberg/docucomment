@@ -4,7 +4,27 @@ body {
 	margin: 0px;
 	padding: 0px;
 }
+tr {
+	text-align: left;
+}
+th, td {
+	vertical-align: top;
+}
+input, select, textarea {
+	font-size: inherit;
+}
+a {
+	text-decoration: underline;
+	color: blue;
+}
+a:hover {
+	text-decoration: none;
+	color: darkblue;
+}
 
+#content {
+	margin: 5px;
+}
 #header {
 	width: 100%;
 	background-color: #61649D;
@@ -24,8 +44,8 @@ body {
 }
 
 #header span#help + div.tooltip {
-	font-weight: normal;
 	visibility: hidden;
+	font-weight: normal;
 	position: absolute;
 	right: 10px;
 	top: 30px;
@@ -225,11 +245,9 @@ ul.comment_list a:hover {
 textarea {
 	height: 100px;
 }
-
 .clear {
 	clear: both;
 }
-
 #form-post-document, #form-post-summary {
 	background: #eef;
 	padding: 5px;
@@ -240,7 +258,34 @@ li.private { color: #aaa; }
 	font-size: 80%;
 }
 
-input, select, textarea {
-	font-size: inherit;
+form.fullscreen {
+	text-align: center;
+	padding: 10px;
 }
-
+form.fullscreen table {
+	margin: 10px auto;
+}
+ul.errorlist {
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 5px 0;
+	color: darkred;
+}
+ul.messages {
+	list-style-type: none;
+	padding: 0;
+}
+ul.messages li {
+	padding: 5px;
+	margin: 5px;
+}
+ul.messages li span {
+	padding-left: 5px;
+	vertical-align: middle;
+}
+ul.messages li.success {
+	background: #cfc;
+}
+ul.messages li.success:before {
+	content: url('tick.png');
+}

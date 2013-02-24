@@ -58,7 +58,13 @@
 		<div id="header">
 			<div id="header-content">
 				<div id="header_right">
-					<span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span>
+					{% if request.user.is_authenticated %}
+						You are logged in as {{ request.user }} |
+						<a href="/logout">Logout</a> |
+					{% else %}
+						<span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span>
+						<a href="/register">Register</a> | <a href="/login">Login</a> |
+					{% endif %}
 					<span id="help"><a href="#" onclick="return false">Help</a></span>
 					<div class="tooltip">
 						<div class="title">Commands while viewing a PDF</div>
@@ -92,6 +98,16 @@
 				<div id="header_center">{% block header_center %}{% endblock %}</div>
 			</div>
 		</div>
-		{% block body %}{% endblock %}
+		<div id="content">
+			{% if messages %}
+			<ul class="messages">
+				{% for message in messages %}
+				<li{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		
+			{% block body %}{% endblock %}
+		</div>
 	</body>
 </html>
