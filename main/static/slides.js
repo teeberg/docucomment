@@ -20,7 +20,7 @@ function displayPage(pagenumber) {
 		page.render({canvasContext: context, viewport: viewport});
 		curpage = pagenumber;
 		$("#slide-page").html("Page " + curpage + " of " + doc.numPages);
-		$("#slide-page").attr("href", "/document/" + hash + "?page=" + pagenumber);
+		$("#slide-page").attr("href", "/space/" + space + "/document/" + hash + "?page=" + pagenumber);
 		$("#link-to-document").val("[[" + document_name + "]]");
 		$("#link-to-document-with-text").val("[[" + document_name + "|Some Text]]");
 		$("#link-to-page").val("[[" + document_name + "/" + pagenumber + "]]");

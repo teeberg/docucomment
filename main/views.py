@@ -47,7 +47,7 @@ def space(request, space):
 	if request.method == 'POST':
 		if request.POST['action'] == "post-document":
 			uploadForm = DocumentUploadForm(request.POST, request.FILES)
-			if uploadForm.is_valid():
+			if uploadForm.is_valid() and request.FILES["file"].name.endswith(".pdf"):
 				f = uploadForm.files["file"]
 				hash = sha1("blob " + str(f.size) + "\0" + f.read()).hexdigest()
 				ds = Document.objects.filter(space=s, hash=hash)
@@ -55,7 +55,6 @@ def space(request, space):
 					d = uploadForm.save(commit=False)
 					d.name = d.file.name
 					d.hash = hash
-					d.file.name = str(d.id)
 					d.upload_date = datetime.now()
 					d.space = s
 					d.save()

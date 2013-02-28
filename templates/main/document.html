@@ -9,6 +9,8 @@
 <script type="text/javascript" src="{% static "slides.js" %}"></script>
 <script type="text/javascript">
 
+	var space = "{{ space.name }}";
+
 	pushPage = function(page) {
 		window.history.pushState(page, "title", "/space/{{ space.name }}/document/{{document.hash}}?page="+page);
 	}
