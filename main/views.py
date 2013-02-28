@@ -21,6 +21,7 @@ import shutil
 import sys
 import traceback
 import pprint
+import re
 
 # Create your views here.
 
@@ -145,10 +146,14 @@ def sections(request, space, summary):
 	return HttpResponse(simplejson.dumps(ss))
 
 def comments(request, space, hash=None, page=None):
+	ss = Space.objects.filter(name=space)
+	if not ss:
+		raise Http404
+	s = ss[0]
 	if hash == None:
-		comments = Comment.objects.filter(deleted=False).order_by('-creation_date')
+		comments = Comment.objects.filter(document__space=s, deleted=False).order_by('-creation_date')
 	else:
-		ds = Document.objects.filter(hash=hash)
+		ds = Document.objects.filter(space=s, hash=hash)
 		if not ds:
 			raise Http404
 		d = ds[0]
@@ -162,8 +167,12 @@ def comments(request, space, hash=None, page=None):
 	return JsonResponse(cs)
 
 def renamedocument(request, space, hash):
+	ss = Space.objects.filter(name=space)
+	if not ss:
+		raise Http404
+	s = ss[0]
 	ret = {'status': 1}
-	ds = Document.objects.filter(hash=hash)
+	ds = Document.objects.filter(space=s, hash=hash)
 	if not ds:
 		ret.update(message='No document exists with this hash.')
 	elif 'name' not in request.POST:
@@ -193,6 +202,10 @@ def setnickname(request):
 
 def comment(request, space, hash, page):
 	if request.method == 'POST':
+		ss = Space.objects.filter(name=space)
+		if not ss:
+			raise Http404
+		s = ss[0]
 		try:
 			page = int(page)
 		except:
@@ -203,7 +216,7 @@ def comment(request, space, hash, page):
 
 		post = request.POST.copy()
 		post.update({'nickname': strip_tags(request.POST['nickname'])})
-		ds = Document.objects.filter(hash=hash)
+		ds = Document.objects.filter(space=s, hash=hash)
 		if not ds:
 			return JsonResponse({"status": 1, "message": "There is no document with this hash."})
 		d = ds[0]
@@ -303,9 +316,13 @@ def register(request):
 	return render(request, 'main/register.html', args)
 
 def deletecomment(request, space, hash, id):
-	ds = Document.objects.filter(hash=hash)
+	ss = Space.objects.filter(name=space)
+	if not ss:
+		raise Http404
+	s = ss[0]
+	ds = Document.objects.filter(space=s, hash=hash)
 	ret = {"status": 0}
-	if len(ds) == 0:
+	if not ds:
 		ret.update(status=1, message="No document with this ID exists")
 	else:
 		d = ds[0]

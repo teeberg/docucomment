@@ -11,14 +11,14 @@
 function getCommentDiv(comment) {
 	var c;
 	if (comment.document_public) {
-		c = $("<div class='comment' data-url='/document/" + comment.document_hash + "?page=" + comment.page + "'></div>");
+		c = $("<div class='comment' data-url='/space/{{ space.name }}/document/" + comment.document_hash + "?page=" + comment.page + "'></div>");
 	} else {
 		c = $("<div class='comment'></div>");
 	}
 	var head = $("<div class='comment-head'></div>");
 	var links = $("<div class='comment-links'></div>");
 	if (comment.document_public) {
-		var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + "'>view</a>");
+		var view_link = $("<a href='/space/{{ space.name }}/document/" + comment.document_hash + "?page=" + comment.page + "'>view</a>");
 		$(links).append(view_link);
 	}
 	$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
