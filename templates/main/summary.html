@@ -22,7 +22,7 @@ function displaySection(index) {
 	$("#form-section").css("display", "none");
 	$("#section-the-section").css("display", "block");
 	$("#section-section a.document-link").click(function(evt) {
-		loadDocument($(evt.target).attr("data-document-hash"), $(evt.target).attr("data-document-name"), $(evt.target).attr("data-page"));
+		loadDocument("{{ space.name }}", $(evt.target).attr("data-document-hash"), $(evt.target).attr("data-document-name"), $(evt.target).attr("data-page"));
 		return false;
 	});
 	MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
@@ -30,7 +30,7 @@ function displaySection(index) {
 }
 function loadSections(index = null) {
 	$.ajax({
-		url: '/summary/{{ summary.id }}/sections',
+		url: '/space/{{ space.name }}/summary/{{ summary.id }}/sections',
 		type: 'get'
 	}).done(function(data) {
 		$(".select-section").parent().remove();
@@ -79,7 +79,7 @@ $(function() {
 	});
 	$("#form-section").submit(function(event) {
 		$.ajax({
-			url: '/summary/{{ summary.id }}/section',
+			url: '/space/{{ space.name }}/summary/{{ summary.id }}/section',
 			type: "post",
 			data: $(this).serialize()
 		}).done(function(data) {
@@ -92,14 +92,14 @@ $(function() {
 		event.preventDefault();
 	});
 	$("#document-select").change(function(evt) {
-		loadDocument($(evt.target).val(), documents[$(evt.target).val()], 0);
+		loadDocument("{{ space.name }}", $(evt.target).val(), documents[$(evt.target).val()], 0);
 		return false;
 	});
 });
 </script>
 {% endblock %}
 
-{% block breadcrumb %} &raquo; <span class="current_document_name">{{summary.name}}</span><span class="actions"> | <a href="javascript:rename()">Rename</a></span>{% endblock %}
+{% block breadcrumb %} &raquo; <span class="current_space_name"><a href="/space/{{space.name}}">{{space.name}}</a></span> &raquo; <span class="current_document_name">{{summary.name}}</span><span class="actions"> | <a href="javascript:rename()">Rename</a></span>{% endblock %}
 
 {% block body %}
 	<div id="sections-bar">
@@ -112,7 +112,7 @@ $(function() {
 	</div>
 
 	<div id="section-bar">
-		<form style="display: none;" id="form-section" method="post" action="/summary/{{ summary.id }}/section">
+		<form style="display: none;" id="form-section" method="post" action="/space/{{ space.name }}/summary/{{ summary.id }}/section">
 			<h3 id="form-section-header">Edit Section</h3>
 			<input type="hidden" name="summary_id" value="{{ summary.id }}" />
 			<input type="hidden" id="section-id" name="id" value="" />

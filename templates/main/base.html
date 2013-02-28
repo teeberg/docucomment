@@ -54,7 +54,7 @@
 		{% block head %}{% endblock %}
 	</head>
 
-	<body class="{{ page }}">
+	<body class="{{ view }}">
 		<div id="header">
 			<div id="header-content">
 				<div id="header_right">
@@ -82,7 +82,7 @@
 					<a href="http://piratepad.net/docucomment">Wishlist</a>
 				</div>
 				<div id="header_left">
-					{% if page = "home" %}
+					{% if view = "home" %}
 						Docucomment
 					{% else %}
 						<a href="/">Docucomment</a>

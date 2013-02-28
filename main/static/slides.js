@@ -48,7 +48,7 @@ function previousPage() {
 	}
 }
 
-function loadDocument(h, name, page) {
+function loadDocument(space, h, name, page) {
 	if (hash == h) {
 		displayPage(startpage);
 	} else {
@@ -64,7 +64,7 @@ function loadDocument(h, name, page) {
 			func();
 			documentLoaded();
 		} else {
-			PDFJS.getDocument("/document/" + h + "/file").then(function(p) {
+			PDFJS.getDocument("/space/" + space + "/document/" + h + "/file").then(function(p) {
 				doc = p;
 				docs[h] = doc;
 				func();

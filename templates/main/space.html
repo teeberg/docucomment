@@ -1,0 +1,142 @@
+{% extends "main/base.html" %}
+{% load staticfiles %}
+
+{% block breadcrumb %} &raquo; <span class="current_space_name">{{space.name}}</span>{% endblock %}
+
+{% block title %}Docucomment{% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+
+function getCommentDiv(comment) {
+	var c;
+	if (comment.document_public) {
+		c = $("<div class='comment' data-url='/document/" + comment.document_hash + "?page=" + comment.page + "'></div>");
+	} else {
+		c = $("<div class='comment'></div>");
+	}
+	var head = $("<div class='comment-head'></div>");
+	var links = $("<div class='comment-links'></div>");
+	if (comment.document_public) {
+		var view_link = $("<a href='/document/" + comment.document_hash + "?page=" + comment.page + "'>view</a>");
+		$(links).append(view_link);
+	}
+	$(head).append("<span class='comment-nickname'>" + comment['nickname'] + "</span>");
+	$(head).append(links);
+	$(c).append(head);
+	$(c).append("<div class='comment-comment'>" + comment['comment'] + "</div>");
+	return c;
+}
+
+function displayComments(comments) {
+	$("#comments").empty();
+	$.each(comments, function(i, comment) {
+		var c = getCommentDiv(comment);
+		$(c).appendTo("#comments");
+	});
+	SyntaxHighlighter.highlight();
+	MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#comments")[0]]);
+}
+
+function loadComments() {
+	$("#comments_loading").css("visibility", "visible");
+	$.ajax({
+		url: "/space/{{ space.name }}/comments",
+		dataType: "json"
+	}).fail(function() {
+		$("#comments_loading").css("visibility", "hidden");
+	}).done(function(data) {
+		var hashtags = {};
+		displayComments(data);
+		$.each(data, function(i, comment) {
+			var matches = comment.comment_plain.match(/\#\w+/g);
+			for (var key in matches) {
+				var tag = matches[key];
+				if (!(tag in hashtags)) {
+					hashtags[tag] = {};
+				}
+				hashtags[tag][comment["id"]] = comment;
+			}
+		});
+
+		if (!hashtags.empty) {
+			$('<a href="">all</a>').click(function() {
+				displayComments(data);
+				return false;
+			}).appendTo("#hashtags");
+			for (var tag in hashtags) {
+				var hashtag = $('<a href="">' + tag + '</a>');
+				$(hashtag).click(function(e) {
+					displayComments(hashtags[$(e.target).html()]);
+					return false;
+				});
+				$(hashtag).appendTo("#hashtags");
+			}
+		}
+		$("#comments_loading").css("visibility", "hidden");
+	});
+}
+
+$(function() {
+	loadComments();
+});
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+	<div id="documents-bar">
+		<h2>Documents</h2>
+		<form id="form-post-document" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="action" value="post-document" />
+			<h3>Upload a Document</h3>
+			{{ uploadForm.as_p }}
+			<button type="submit">Upload</button>
+		</form>
+		{% if documents %}
+			<div id="documents">
+				<ul>
+				{% for document in documents %}
+					<li>
+					{% if document.public %}
+						<a href="/space/{{ space.name}}/document/{{ document.hash }}">{{ document.name }}</a></li>
+					{% else %}
+						{{ document.name }}
+					{% endif %}
+				{% endfor %}
+				</ul>
+			</div>
+		{% else %}
+			<p>No public documents.</p>
+		{% endif %}
+	</div>
+
+	<div id="summaries-bar">
+		<h2>Summaries</h2>
+		<form id="form-post-summary" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="action" value="post-summary" />
+			<h3>Start a Summary</h3>
+			{{ summaryForm.as_p }}
+			<button type="submit">Start</button>
+		</form>
+		{% if summaries %}
+			<div id="summaries">
+				<ul>
+				{% for summary in summaries %}
+					<li><a href="summary/{{ summary.id }}">{{ summary.name }}</a></li>
+				{% endfor %}
+				</ul>
+			</div>
+		{% else %}
+			<p>No summaries.</p>
+		{% endif %}
+	</div>
+
+	<div id="comments-bar">
+		<h2>Comments<span id="comments_loading" style="visibility: hidden"> <img src="{% static "ajax-loader.gif" %}"/></span></h2>
+			<div id="hashtags"></div>
+			<div id="comments"></div>
+	</div>
+
+{% endblock %}

@@ -1,7 +1,13 @@
 from django.db import models
 from main.parser import Parser
 
+class Space(models.Model):
+	creation_date = models.DateTimeField('date created')
+	deleted = models.BooleanField()
+	name = models.CharField(max_length=200)
+
 class Summary(models.Model):
+	space = models.ForeignKey(Space)
 	name = models.CharField(max_length=200)
 	creation_date = models.DateTimeField('date created')
 	deleted = models.BooleanField()
@@ -18,6 +24,7 @@ class Section(models.Model):
 		return Parser.parse(self.section)
 
 class Document(models.Model):
+	space = models.ForeignKey(Space)
 	name = models.CharField(max_length=200)
 	file = models.FileField(upload_to='files')
 	upload_date = models.DateTimeField('date uploaded')
@@ -35,4 +42,3 @@ class Comment(models.Model):
 
 	def comment_parsed(self):
 		return Parser.parse(self.comment)
-		

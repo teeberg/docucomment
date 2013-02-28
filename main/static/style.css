@@ -75,6 +75,12 @@ div#navigation_documents img {
 	margin: 0px auto;
 }
 
+#home-bar {
+	float: left;
+	margin: 10px;
+	width: 600px;
+}
+
 #sections-bar {
 	float: left;
 	margin: 10px;

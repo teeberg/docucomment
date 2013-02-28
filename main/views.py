@@ -2,6 +2,9 @@ from django import forms
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.files import File
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from django.core.servers.basehttp import FileWrapper
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
@@ -10,45 +13,69 @@ from django.shortcuts import redirect, render, render_to_response
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import escape, strip_tags
-from main.models import Document, Comment, Summary, Section
+from main.models import Space, Document, Comment, Summary, Section
 from datetime import datetime, timedelta
 from hashlib import sha1
 from mimetypes import guess_type
+import shutil
 import sys
 import traceback
+import pprint
 
 # Create your views here.
 
 def home(request):
 	if request.method == 'POST':
+		if request.POST['action'] == 'create-space':
+			spaceForm = SpaceForm(request.POST)
+			if spaceForm.is_valid():
+				space = spaceForm.save(commit=False)
+				space.creation_date = datetime.now()
+				space.save()
+				return redirect("/space/" + space.name)
+	return render_to_response('main/home.html', {"view": "home", "spaceForm": SpaceForm()})
+	
+def space(request, space):
+	ss = Space.objects.filter(name=space)
+	if len(ss) == 0:
+		raise Http404
+	s = ss[0]
+	if request.method == 'POST':
 		if request.POST['action'] == "post-document":
 			uploadForm = DocumentUploadForm(request.POST, request.FILES)
 			if uploadForm.is_valid():
-				file = request.FILES['file']
-				hash = sha1("blob " + str(file.size) + "\0" + file.read()).hexdigest()
-				ds = Document.objects.filter(hash=hash)
+				f = uploadForm.files["file"]
+				hash = sha1("blob " + str(f.size) + "\0" + f.read()).hexdigest()
+				ds = Document.objects.filter(space=s, hash=hash)
 				if len(ds) == 0:
 					d = uploadForm.save(commit=False)
+					d.name = d.file.name
 					d.hash = hash
-					d.name = file.name
+					d.file.name = str(d.id)
 					d.upload_date = datetime.now()
+					d.space = s
 					d.save()
-				return redirect("/document/" + hash)
+				return redirect("/space/" + s.name + "/document/" + hash)
 		elif request.POST['action'] == "post-summary":
 			summaryForm = SummaryForm(request.POST)
 			if summaryForm.is_valid():
-				s = summaryForm.save(commit=False)
-				s.creation_date = datetime.now()
-				s.save()
-				return redirect("/summary/" + str(s.id))
+				su = summaryForm.save(commit=False)
+				su.creation_date = datetime.now()
+				su.space = s
+				su.save()
+				return redirect("/space/" + s.name + "/summary/" + str(su.id))
 
 	uploadForm = DocumentUploadForm()
 	summaryForm = SummaryForm()
 	
-	return render_to_response('main/home.html', {"page": "home", "documents": Document.objects.order_by('name').all(), "uploadForm": uploadForm, "summaries": Summary.objects.order_by('name').all(), "summaryForm": summaryForm})
+	return render_to_response('main/space.html', {"view": "space", "space": s, "documents": Document.objects.order_by('name').filter(space=s), "uploadForm": uploadForm, "summaries": Summary.objects.order_by('name').filter(space=s), "summaryForm": summaryForm})
 
-def send_file(request, hash):
-	ds = Document.objects.filter(hash=hash)
+def send_file(request, space, hash):
+	ss = Space.objects.filter(name=space)
+	if len(ss) == 0:
+		raise Http404
+	s = ss[0]
+	ds = Document.objects.filter(space=s, hash=hash)
 	if len(ds) == 0:
 		raise Http404
 	d = ds[0]
@@ -58,41 +85,49 @@ def send_file(request, hash):
 	response['Content-Disposition'] = "attachment; filename=\"{}\"".format(d.name)
 	return response
 
-def summary(request, id):
+def summary(request, space, id):
+	ss = Space.objects.filter(name=space)
+	if len(ss) == 0:
+		raise Http404
+	s = ss[0]
 	try:
-		s = Summary.objects.get(pk=id)
+		su = Summary.objects.get(pk=id)
 	except ObjectDoesNotExist:
 		raise Http404
-	if s == None:
+	if su == None:
 		raise Http404
 	sectionForm = SectionForm()
 	documents = Document.objects.filter(deleted=False, public=True).order_by("name")
-	return render_to_response('main/summary.html', {"summary": s, "sectionForm": sectionForm, "documents": documents})
+	return render_to_response('main/summary.html', {"view": "summary", "space": s, "summary": su, "sectionForm": sectionForm, "documents": documents})
 
-def document(request, hash):
-	ds = Document.objects.filter(hash=hash)
+def document(request, space, hash):
+	ss = Space.objects.filter(name=space)
+	if len(ss) == 0:
+		raise Http404
+	s = ss[0]
+	ds = Document.objects.filter(space=s, hash=hash)
 	if len(ds) == 0:
 		raise Http404
 	try:
 		page = int(request.GET['page']) if 'page' in request.GET else 1
 	except:
-		return redirect("/document/"+hash)
+		return redirect("/space/" + space + "/document/" + hash)
 	initial = {}
 	d = ds[0]
 
 	# previous and next documents, for alphabetical navigation
-	try:    previous = Document.objects.filter(name__lt=d.name, public=1).order_by('-name')[0]
+	try:    previous = Document.objects.filter(space=space, name__lt=d.name, public=1).order_by('-name')[0]
 	except: previous = None
 
-	try:    next     = Document.objects.filter(name__gt=d.name, public=1).order_by('name')[0]
+	try:    next     = Document.objects.filter(space=space, name__gt=d.name, public=1).order_by('name')[0]
 	except: next     = None
 
 	if "nickname" in request.COOKIES:
 		initial.update(nickname=request.COOKIES['nickname'])
 	form = CommentForm(initial=initial)
-	return render_to_response('main/document.html', {"document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
+	return render_to_response('main/document.html', {"view": "document", "space": s, "document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
 
-def sections(request, summary):
+def sections(request, space, summary):
 	try:
 		su = Summary.objects.get(pk=summary)
 	except ObjectDoesNotExist:
@@ -106,7 +141,7 @@ def sections(request, summary):
 		ss[section.index] = s
 	return HttpResponse(simplejson.dumps(ss))
 
-def comments(request, hash=None, page=None):
+def comments(request, space, hash=None, page=None):
 	if hash == None:
 		comments = Comment.objects.filter(deleted=False).order_by('-creation_date')
 	else:
@@ -123,7 +158,7 @@ def comments(request, hash=None, page=None):
 			c.update(document_hash=comment.document.hash)
 	return JsonResponse(cs)
 
-def renamedocument(request, hash):
+def renamedocument(request, space, hash):
 	ret = {'status': 1}
 	ds = Document.objects.filter(hash=hash)
 	if len(ds) == 0:
@@ -153,7 +188,7 @@ def setnickname(request):
 		response.update(status=1, message='No new nick provided.')
 		return JsonResponse(response)
 
-def comment(request, hash, page):
+def comment(request, space, hash, page):
 	if request.method == 'POST':
 		try:
 			page = int(page)
@@ -193,7 +228,7 @@ def comment(request, hash, page):
 				return response
 	raise Http404
 
-def section(request, summary):
+def section(request, space, summary):
 	try:
 		su = Summary.objects.get(pk=summary)
 	except ObjectDoesNotExist:
@@ -202,12 +237,12 @@ def section(request, summary):
 		raise Http404
 	if request.method == "POST":
 		if request.POST["summary_id"] != summary:
-			return JsonResponse({"status": "error", "message": "summary id doesn't correspond"})
+			return JsonResponse({"status": 1, "message": "summary id doesn't correspond"})
 		if "id" in request.POST and len(request.POST['id']) > 0:
 			sectionForm = SectionForm(request.POST, instance=Section.objects.get(pk=int(request.POST['id'])))
 			if sectionForm.is_valid():
 				section = sectionForm.save()
-				return JsonResponse({"status": "ok"})
+				return JsonResponse({"status": 0})
 		else:
 			sectionForm = SectionForm(request.POST)
 			if sectionForm.is_valid():
@@ -220,7 +255,7 @@ def section(request, summary):
 				else:
 					s.index = 0
 				s.save()
-				return JsonResponse({"status": "ok", "id": s.id, "index": s.index})
+				return JsonResponse({"status": 0, "id": s.id, "index": s.index})
 	raise Http404
 
 def login(request):
@@ -239,7 +274,7 @@ def login(request):
 
 	return render(request, 'main/login.html', args)
 
-def deletecomment(request, hash, id):
+def deletecomment(request, space, hash, id):
 	ds = Document.objects.filter(hash=hash)
 	ret = {"status": 0}
 	if len(ds) == 0:
@@ -261,6 +296,11 @@ class JsonResponse(HttpResponse):
 		if 'content_type' not in kwargs:
 			kwargs.update(content_type='application/json')
 		super(JsonResponse, self).__init__(simplejson.dumps(data), *args, **kwargs)
+
+class SpaceForm(forms.ModelForm):
+	class Meta:
+		model = Space
+		fields = ('name',)
 
 class SummaryForm(forms.ModelForm):
 	class Meta:
