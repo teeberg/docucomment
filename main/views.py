@@ -9,7 +9,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, render_to_response
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import escape, strip_tags
@@ -29,15 +29,19 @@ def home(request):
 		if request.POST['action'] == 'create-space':
 			spaceForm = SpaceForm(request.POST)
 			if spaceForm.is_valid():
-				space = spaceForm.save(commit=False)
-				space.creation_date = datetime.now()
-				space.save()
+				ss = Space.objects.filter(name=request.POST["name"])
+				if ss:
+					space = ss[0]
+				else:
+					space = spaceForm.save(commit=False)
+					space.creation_date = datetime.now()
+					space.save()
 				return redirect("/space/" + space.name)
 	return render_to_response('main/home.html', {"view": "home", "spaceForm": SpaceForm()})
 	
 def space(request, space):
 	ss = Space.objects.filter(name=space)
-	if len(ss) == 0:
+	if not ss:
 		raise Http404
 	s = ss[0]
 	if request.method == 'POST':
@@ -72,7 +76,7 @@ def space(request, space):
 
 def send_file(request, space, hash):
 	ss = Space.objects.filter(name=space)
-	if len(ss) == 0:
+	if not ss:
 		raise Http404
 	s = ss[0]
 	ds = Document.objects.filter(space=s, hash=hash)
@@ -87,7 +91,7 @@ def send_file(request, space, hash):
 
 def summary(request, space, id):
 	ss = Space.objects.filter(name=space)
-	if len(ss) == 0:
+	if not ss:
 		raise Http404
 	s = ss[0]
 	try:
@@ -102,11 +106,11 @@ def summary(request, space, id):
 
 def document(request, space, hash):
 	ss = Space.objects.filter(name=space)
-	if len(ss) == 0:
+	if not ss:
 		raise Http404
 	s = ss[0]
 	ds = Document.objects.filter(space=s, hash=hash)
-	if len(ds) == 0:
+	if not ds:
 		raise Http404
 	try:
 		page = int(request.GET['page']) if 'page' in request.GET else 1
@@ -146,7 +150,7 @@ def comments(request, space, hash=None, page=None):
 		comments = Comment.objects.filter(deleted=False).order_by('-creation_date')
 	else:
 		ds = Document.objects.filter(hash=hash)
-		if len(ds) == 0:
+		if not ds:
 			raise Http404
 		d = ds[0]
 		comments = Comment.objects.filter(document=d, page=page, deleted=False)
@@ -161,7 +165,7 @@ def comments(request, space, hash=None, page=None):
 def renamedocument(request, space, hash):
 	ret = {'status': 1}
 	ds = Document.objects.filter(hash=hash)
-	if len(ds) == 0:
+	if not ds:
 		ret.update(message='No document exists with this hash.')
 	elif 'name' not in request.POST:
 		ret.update(message='No new name supplied.')
@@ -201,7 +205,7 @@ def comment(request, space, hash, page):
 		post = request.POST.copy()
 		post.update({'nickname': strip_tags(request.POST['nickname'])})
 		ds = Document.objects.filter(hash=hash)
-		if len(ds) == 0:
+		if not ds:
 			return JsonResponse({"status": 1, "message": "There is no document with this hash."})
 		d = ds[0]
 		if post.has_key('id') and len(post['id']) > 0:
