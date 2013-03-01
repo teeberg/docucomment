@@ -21,7 +21,7 @@ class Section(models.Model):
 	deleted = models.BooleanField()
 
 	def section_parsed(self):
-		return Parser.parse(self.section)
+		return Parser.parse(self.section, self.summary.space)
 
 class Document(models.Model):
 	space = models.ForeignKey(Space)
@@ -41,4 +41,4 @@ class Comment(models.Model):
 	deleted = models.BooleanField()
 
 	def comment_parsed(self):
-		return Parser.parse(self.comment)
+		return Parser.parse(self.comment, self.document.space)

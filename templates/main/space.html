@@ -124,7 +124,7 @@ $(function() {
 			<div id="summaries">
 				<ul>
 				{% for summary in summaries %}
-					<li><a href="summary/{{ summary.id }}">{{ summary.name }}</a></li>
+					<li><a href="/space/{{ space.name }}/summary/{{ summary.id }}">{{ summary.name }}</a></li>
 				{% endfor %}
 				</ul>
 			</div>

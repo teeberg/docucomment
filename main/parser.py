@@ -5,23 +5,32 @@ import main.models
 
 class Parser:
 	@staticmethod
-	def parse(string):
+	def parse(string, space):
 		res = escape(string)
+
+		# Urls
+		url_regex = re.compile(r"\[(http:\/\/([^]]+))\]")
+		def make_url(match):
+			return '<a href="'+match.group(1)+'">'+match.group(2)+'</a>'
+		res = url_regex.sub(make_url, res)
+			
+
+		# Internal links
 		link_regex = re.compile(r"\[\[([^\]/\|]+)(\/(\d+))?(?:\|([^\]]+))?\]\]")
 		def make_ahref(match):
 			d = match.groups()
 			pdf, pagepart, page, title = match.groups()
-			ds = main.models.Document.objects.filter(name=pdf)
+			ds = main.models.Document.objects.filter(space=space, name=pdf)
 			if len(ds) >= 1:
 				d = ds[0]
 				if page == None:
 					if title == None:
 						title = d.name
-					return '<a class="document-link" data-document-hash="%s" data-document-name="%s" data-page=%s href="/document/%s">%s</a>' % (d.hash, d.name, 0, d.hash, title)
+					return '<a class="document-link" data-document-hash="%s" data-document-name="%s" data-page=%s href="/space/%s/document/%s">%s</a>' % (d.hash, d.name, 0, space.name, d.hash, title)
 				else:
 					if title == None:
 						title = "{} (page {})".format(d.name, page)
-					return '<a class="document-link" data-document-hash="%s" data-document-name="%s" data-page=%s href="/document/%s?page=%s">%s</a>' % (d.hash, d.name, page, d.hash, page, title)
+					return '<a class="document-link" data-document-hash="%s" data-document-name="%s" data-page=%s href="/space/%s/document/%s?page=%s">%s</a>' % (d.hash, d.name, page, space.name, d.hash, page, title)
 			return match.group(0)
 		res = link_regex.sub(make_ahref, res)
 		block_regex = re.compile(r"\[(\w+)(( \w+=\w+)*)\]")
