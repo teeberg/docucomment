@@ -7,10 +7,19 @@
 {% block head %}{% endblock %}
 
 {% block body %}
+	{% if spaces %}
+	<h1>Select a space</h1>
+	<ul>
+		{% for s in spaces %}
+		<li><a href="/space/{{ s.name }}">{{ s.name }}</a></li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+
 	<div id="home-bar">
 		<form id="form-create-space" method="post">
+			<h1>Create a new space</h1>
 			<input type="hidden" name="action" value="create-space" />
-			<h3>Open a Docuspace</h3>
 			{{ spaceForm.as_p }}
 			<button type="submit">Open</button>
 		</form>

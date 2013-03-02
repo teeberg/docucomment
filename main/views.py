@@ -38,7 +38,7 @@ def home(request):
 					space.creation_date = datetime.now()
 					space.save()
 				return redirect("/space/" + space.name)
-	return render(request, 'main/home.html', {"view": "home", "spaceForm": SpaceForm()})
+	return render(request, 'main/home.html', {"view": "home", "spaceForm": SpaceForm(), "spaces": Space.objects.order_by('name')})
 	
 def space(request, space):
 	ss = Space.objects.filter(name=space)
