@@ -9,7 +9,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, render, render_to_response
+from django.shortcuts import redirect, render
 from django.template import RequestContext
 from django.utils import simplejson
 from django.utils.html import escape, strip_tags
@@ -38,7 +38,7 @@ def home(request):
 					space.creation_date = datetime.now()
 					space.save()
 				return redirect("/space/" + space.name)
-	return render_to_response('main/home.html', {"view": "home", "spaceForm": SpaceForm()})
+	return render(request, 'main/home.html', {"view": "home", "spaceForm": SpaceForm()})
 	
 def space(request, space):
 	ss = Space.objects.filter(name=space)
@@ -72,7 +72,7 @@ def space(request, space):
 	uploadForm = DocumentUploadForm()
 	summaryForm = SummaryForm()
 	
-	return render_to_response('main/space.html', {"view": "space", "space": s, "documents": Document.objects.order_by('name').filter(space=s), "uploadForm": uploadForm, "summaries": Summary.objects.order_by('name').filter(space=s), "summaryForm": summaryForm})
+	return render(request, 'main/space.html', {"view": "space", "space": s, "documents": Document.objects.order_by('name').filter(space=s), "uploadForm": uploadForm, "summaries": Summary.objects.order_by('name').filter(space=s), "summaryForm": summaryForm})
 
 def send_file(request, space, hash):
 	ss = Space.objects.filter(name=space)
@@ -102,7 +102,7 @@ def summary(request, space, id):
 		raise Http404
 	sectionForm = SectionForm()
 	documents = Document.objects.filter(deleted=False, public=True).order_by("name")
-	return render_to_response('main/summary.html', {"view": "summary", "space": s, "summary": su, "sectionForm": sectionForm, "documents": documents})
+	return render(request, 'main/summary.html', {"view": "summary", "space": s, "summary": su, "sectionForm": sectionForm, "documents": documents})
 
 def document(request, space, hash):
 	ss = Space.objects.filter(name=space)
@@ -129,7 +129,7 @@ def document(request, space, hash):
 	if "nickname" in request.COOKIES:
 		initial.update(nickname=request.COOKIES['nickname'])
 	form = CommentForm(initial=initial)
-	return render_to_response('main/document.html', {"view": "document", "space": s, "document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
+	return render(request, 'main/document.html', {"view": "document", "space": s, "document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
 
 def sections(request, space, summary):
 	try:
