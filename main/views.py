@@ -86,7 +86,7 @@ def send_file(request, space, hash):
 	wrapper = FileWrapper(d.file)
 	response = HttpResponse(wrapper, content_type=guess_type(d.name)[0])
 	response['Content-Length'] = d.file.size
-	response['Content-Disposition'] = "attachment; filename=\"{}\"".format(d.name)
+	response['Content-Disposition'] = "attachment; filename=\"{0}\"".format(d.name)
 	return response
 
 def summary(request, space, id):

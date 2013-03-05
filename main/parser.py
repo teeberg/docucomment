@@ -47,7 +47,7 @@ class Parser:
 		
 		block_end_regex = re.compile(r"\[\/(\w+)\]")
 		def make_block_end(match):
-			blocks = {"code"}
+			blocks = ("code",)
 			if match.group(1) in blocks:
 				return "</%s>" % match.group(1)
 			return match.group(0)
