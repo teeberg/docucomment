@@ -295,3 +295,14 @@ ul.messages li.success {
 ul.messages li.success:before {
 	content: url('tick.png');
 }
+
+/* EMBED */
+body.embed #slide-bar {
+}
+body.embed #slide-slide {
+	width: auto;
+}
+body.embed #slide-canvas {
+	height: 500px;
+}
+

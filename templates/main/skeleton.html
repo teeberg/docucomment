@@ -1,0 +1,60 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" />
+		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shCore.css" %}" />
+		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shThemeDefault.css" %}" />
+		<script type="text/javascript" src="{% static "jquery-1.9.1.min.js" %}"></script>
+		<script type="text/javascript" src="{% static "pdf.js" %}"></script>
+		<script type="text/javascript" src="{% static "docucomment.js" %}"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+				tex2jax: {
+					inlineMath: [ ['$$', '$$'], ['$', '$'] ],
+					displayMath: [ ['[math]', '[/math]'] ],
+					processEscapes: true
+				},
+			});
+		</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shCore.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushAppleScript.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushAS3.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushBash.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushColdFusion.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCpp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCSharp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCss.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushDelphi.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushDiff.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushErlang.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushGroovy.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJava.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJavaFX.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJScript.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPerl.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPhp.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPlain.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPython.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushRuby.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushSass.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushScala.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushSql.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushVb.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushVb.js" %}"></script>
+		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushXml.js" %}"></script>
+		<script type="text/javascript">
+			$(function() {
+				SyntaxHighlighter.config.tagName = "code";
+			});
+		</script>
+		{% block head %}{% endblock %}
+	</head>
+
+	<body class="{{ view }}">
+		{% block htmlbody %}{% endblock %}
+	</body>
+</html>

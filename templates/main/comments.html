@@ -1,0 +1,11 @@
+<div id="comments-bar">
+	<h2>Comments</h2>
+	<div id="comments"></div>
+	<form id="post-comment" method="post">
+		<h2 id="post-comment-header">New Comment</h2>
+		{{ commentForm.as_p }}
+		<input type="hidden" id="comment-id" name="id" value=""/>
+		<button type="submit">Comment</button>
+		<button type="button" id="comment-cancel">Cancel</button>
+	</form>
+</div>

@@ -12,10 +12,14 @@
 		<a href="" class="next"><img src="{% static "next.png" %}"/></a>
 		<a href="" class="last"><img src="{% static "last.png" %}"/></a>
 	</div>
-	<div id="links-to-document">
-		Links to this document:<br />
-		<input type="text" id="link-to-document"></input><input type="text"a id="link-to-document-with-text"></input><br />
-		<input type="text" id="link-to-page"></input><input type="text"a id="link-to-page-with-text"></input>
-	</div>
+	{% if displaylinks %}
+		<div id="links-to-document">
+			Links to this document:<br />
+			<input type="text" id="link-to-document"></input><input type="text"a id="link-to-document-with-text"></input><br />
+			<input type="text" id="link-to-page"></input><input type="text"a id="link-to-page-with-text"></input>
+			Embed this page:<br />
+			<textarea height="50px"></textarea>
+		</div>
+	{% endif %}
 </div>
 

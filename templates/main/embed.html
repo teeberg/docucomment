@@ -1,0 +1,19 @@
+{% extends "main/skeleton.html" %}
+{% load staticfiles %}
+{% block head %}
+	<script type="text/javascript" src="{% static "slides.js" %}"></script>
+	<script type="text/javascript">
+
+		var space = "{{ space.name }}";
+		var document_hash = "{{ document.hash }}";
+		var document_page = "{{ document.page }}";
+		var document_name = "{{ document.name }}";
+
+	</script>
+	<script type="text/javascript" src="{% static "comments.js" %}"></script>
+
+{% endblock %}
+{% block htmlbody %}
+	{% include "main/slides.html" %}
+	{% include "main/comments.html" %}
+{% endblock %}

@@ -1,113 +1,59 @@
+{% extends "main/skeleton.html" %}
 {% load staticfiles %}
-
-<!doctype html>
-<html>
-	<head>
-		<title>{% block title %}{% endblock %}</title>
-		<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" />
-		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shCore.css" %}" />
-		<link rel="stylesheet" type="text/css" href="{% static "syntaxhighlighter_3.0.83/styles/shThemeDefault.css" %}" />
-		<script type="text/javascript" src="{% static "jquery-1.9.1.min.js" %}"></script>
-		<script type="text/javascript" src="{% static "pdf.js" %}"></script>
-		<script type="text/javascript" src="{% static "docucomment.js" %}"></script>
-		<script type="text/x-mathjax-config">
-			MathJax.Hub.Config({
-				tex2jax: {
-					inlineMath: [ ['$$', '$$'], ['$', '$'] ],
-					displayMath: [ ['[math]', '[/math]'] ],
-					processEscapes: true
-				},
-			});
-		</script>
-		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shCore.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushAppleScript.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushAS3.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushBash.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushColdFusion.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCpp.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCSharp.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushCss.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushDelphi.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushDiff.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushErlang.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushGroovy.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJava.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJavaFX.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushJScript.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPerl.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPhp.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPlain.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushPython.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushRuby.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushSass.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushScala.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushSql.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushVb.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushVb.js" %}"></script>
-		<script type="text/javascript" src="{% static "syntaxhighlighter_3.0.83/scripts/shBrushXml.js" %}"></script>
-		<script type="text/javascript">
-			$(function() {
-				SyntaxHighlighter.config.tagName = "code";
-			});
-		</script>
-		{% block head %}{% endblock %}
-	</head>
-
-	<body class="{{ view }}">
-		<div id="header">
-			<div id="header-content">
-				<div id="header_right">
-					{% if request.user.is_authenticated %}
-						You are logged in as {{ request.user }} |
-						<a href="/logout">Logout</a> |
-					{% else %}
-						<span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span>
-						<a href="/register">Register</a> | <a href="/login">Login</a> |
-					{% endif %}
-					<span id="help"><a href="#" onclick="return false">Help</a></span>
-					<div class="tooltip">
-						<div class="title">Commands while viewing a PDF</div>
-						<div class="content">
-							<table>
-								<tr>
-									<th>Left/Right Arrow</th>
-									<td>Move <b>one</b> page left/right</td>
-								</tr>
-								<tr>
-									<th>Ctrl+Left/Right Arrow</th>
-									<td>Move <b>5</b> pages left/right</td>
-								</tr>
-								<tr>
-									<th>R</th>
-									<td>Reload comments</td>
-								</tr>
-							</table>
-						</div>
-					</div> |
-					<a href="http://piratepad.net/docucomment">Wishlist</a>
-				</div>
-				<div id="header_left">
-					{% if view = "home" %}
-						Docucomment
-					{% else %}
-						<a href="/">Docucomment</a>
-					{% endif %}
-					{% block breadcrumb %}{% endblock %}
-				</div>
-				<div id="header_center">{% block header_center %}{% endblock %}</div>
+ 
+{% block htmlbody %}
+	<div id="header">
+		<div id="header-content">
+			<div id="header_right">
+				{% if request.user.is_authenticated %}
+					You are logged in as {{ request.user }} |
+					<a href="/logout">Logout</a> |
+				{% else %}
+					<span id="info_commenting_as" style="visibility: hidden">You are commenting as <a class="current_nickname" href="javascript:changeNickname()"></a> | </span>
+					<a href="/register">Register</a> | <a href="/login">Login</a> |
+				{% endif %}
+				<span id="help"><a href="#" onclick="return false">Help</a></span>
+				<div class="tooltip">
+					<div class="title">Commands while viewing a PDF</div>
+					<div class="content">
+						<table>
+							<tr>
+								<th>Left/Right Arrow</th>
+								<td>Move <b>one</b> page left/right</td>
+							</tr>
+							<tr>
+								<th>Ctrl+Left/Right Arrow</th>
+								<td>Move <b>5</b> pages left/right</td>
+							</tr>
+							<tr>
+								<th>R</th>
+								<td>Reload comments</td>
+							</tr>
+						</table>
+					</div>
+				</div> |
+				<a href="http://piratepad.net/docucomment">Wishlist</a>
 			</div>
+			<div id="header_left">
+				{% if view = "home" %}
+					Docucomment
+				{% else %}
+					<a href="/">Docucomment</a>
+				{% endif %}
+				{% block breadcrumb %}{% endblock %}
+			</div>
+			<div id="header_center">{% block header_center %}{% endblock %}</div>
 		</div>
-		<div id="content">
-			{% if messages %}
-			<ul class="messages">
-				{% for message in messages %}
-				<li{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-		
-			{% block body %}{% endblock %}
-		</div>
-	</body>
-</html>
+	</div>
+	<div id="content">
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	
+		{% block body %}{% endblock %}
+	</div>
+{% endblock %}

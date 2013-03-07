@@ -38,7 +38,8 @@ def home(request):
 					space.creation_date = datetime.now()
 					space.save()
 				return redirect("/space/" + space.name)
-	return render(request, 'main/home.html', {"view": "home", "spaceForm": SpaceForm(), "spaces": Space.objects.order_by('name')})
+	#return render(request, 'main/home.html', {"view": "home", "spaceForm": SpaceForm(), "spaces": Space.objects.order_by('name')})
+	return render(request, 'main/home.html', {"view": "home", "spaceForm": SpaceForm(), "spaces": []})
 	
 def space(request, space):
 	ss = Space.objects.filter(name=space)
@@ -105,6 +106,12 @@ def summary(request, space, id):
 	return render(request, 'main/summary.html', {"view": "summary", "space": s, "summary": su, "sectionForm": sectionForm, "documents": documents})
 
 def document(request, space, hash):
+	return doc(request, space, hash, "document")
+
+def document_embed(request, space, hash):
+	return doc(request, space, hash, "embed")
+
+def doc(request, space, hash, view):
 	ss = Space.objects.filter(name=space)
 	if not ss:
 		raise Http404
@@ -129,7 +136,8 @@ def document(request, space, hash):
 	if "nickname" in request.COOKIES:
 		initial.update(nickname=request.COOKIES['nickname'])
 	form = CommentForm(initial=initial)
-	return render(request, 'main/document.html', {"view": "document", "space": s, "document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next})
+	return render(request, 'main/'+view+'.html' if view=="embed" else 'main/document.html', {"view": view, "space": s, "document": d, 'commentForm': form, 'page': page, 'previous': previous, 'next': next, 'displaylinks': view=="document"})
+
 
 def sections(request, space, summary):
 	try:

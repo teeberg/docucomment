@@ -14,9 +14,9 @@ function displayPage(pagenumber) {
 		var scale = 1.5;
 		var viewport = page.getViewport(scale);
 		var canvas = document.getElementById('slide-canvas');
-		var context = canvas.getContext('2d');
 		canvas.height = viewport.height;
 		canvas.width = viewport.width;
+		var context = canvas.getContext('2d');
 		page.render({canvasContext: context, viewport: viewport});
 		curpage = pagenumber;
 		$("#slide-page").html("Page " + curpage + " of " + doc.numPages);
